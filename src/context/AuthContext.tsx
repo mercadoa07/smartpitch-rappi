@@ -1,47 +1,78 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 import type { User } from '../types';
+import { upsertUser } from '../lib/queries';
 
 interface AuthContextValue {
   user: User | null;
   setUser: (user: User | null) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isLoading: boolean;
+  authError: string | null;
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUserState] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [authError, setAuthError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const stored = localStorage.getItem('smartpitch_user');
-    if (stored) {
-      try {
-        setUserState(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem('smartpitch_user');
-      }
+  const handleSession = async (authUser: SupabaseUser) => {
+    const email = authUser.email ?? '';
+    if (!email.endsWith('@rappi.com')) {
+      setAuthError('Solo se permiten correos @rappi.com');
+      await supabase.auth.signOut();
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+    try {
+      const fullName =
+        authUser.user_metadata?.full_name ??
+        authUser.user_metadata?.name ??
+        '';
+      const dbUser = await upsertUser(email, fullName);
+      setUser(dbUser);
+      setAuthError(null);
+    } catch {
+      setAuthError('Error de conexión. Intenta nuevamente.');
     }
     setIsLoading(false);
-  }, []);
-
-  const setUser = (u: User | null) => {
-    setUserState(u);
-    if (u) {
-      localStorage.setItem('smartpitch_user', JSON.stringify(u));
-    } else {
-      localStorage.removeItem('smartpitch_user');
-    }
   };
 
-  const logout = () => {
-    setUser(null);
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        handleSession(session.user);
+      } else {
+        setIsLoading(false);
+      }
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session: Session | null) => {
+        if (session?.user) {
+          await handleSession(session.user);
+        } else {
+          setUser(null);
+          setIsLoading(false);
+        }
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const logout = async () => {
+    await supabase.auth.signOut();
     localStorage.removeItem('smartpitch_negociacion');
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, setUser, logout, isLoading, authError }}>
       {children}
     </AuthContext.Provider>
   );

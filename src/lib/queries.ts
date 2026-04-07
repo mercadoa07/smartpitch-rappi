@@ -2,65 +2,27 @@ import { supabase } from './supabase';
 import type { Metrics, User } from '../types';
 
 export async function getCountries(): Promise<{ country_code: string; country_name: string }[]> {
-  const { data, error } = await supabase
-    .from('smartpitch_metrics')
-    .select('country_code, country_name')
-    .order('country_name');
+  const { data, error } = await supabase.rpc('get_distinct_countries');
   if (error) throw error;
-  const seen = new Set<string>();
-  return (data || []).filter(r => {
-    if (seen.has(r.country_code)) return false;
-    seen.add(r.country_code);
-    return true;
-  });
+  return data || [];
 }
 
 export async function getCities(countryCode: string): Promise<string[]> {
-  const { data, error } = await supabase
-    .from('smartpitch_metrics')
-    .select('city')
-    .eq('country_code', countryCode)
-    .order('city');
+  const { data, error } = await supabase.rpc('get_distinct_cities', { p_country: countryCode });
   if (error) throw error;
-  const seen = new Set<string>();
-  return (data || []).filter(r => {
-    if (seen.has(r.city)) return false;
-    seen.add(r.city);
-    return true;
-  }).map(r => r.city);
+  return (data || []).map((r: { city: string }) => r.city);
 }
 
 export async function getMicrozones(countryCode: string, city: string): Promise<string[]> {
-  const { data, error } = await supabase
-    .from('smartpitch_metrics')
-    .select('microzone_id')
-    .eq('country_code', countryCode)
-    .eq('city', city)
-    .order('microzone_id');
+  const { data, error } = await supabase.rpc('get_distinct_microzones', { p_country: countryCode, p_city: city });
   if (error) throw error;
-  const seen = new Set<string>();
-  return (data || []).filter(r => {
-    if (seen.has(r.microzone_id)) return false;
-    seen.add(r.microzone_id);
-    return true;
-  }).map(r => r.microzone_id);
+  return (data || []).map((r: { microzone_id: string }) => r.microzone_id);
 }
 
 export async function getTags(countryCode: string, city: string, microzoneId: string): Promise<string[]> {
-  const { data, error } = await supabase
-    .from('smartpitch_metrics')
-    .select('tag')
-    .eq('country_code', countryCode)
-    .eq('city', city)
-    .eq('microzone_id', microzoneId)
-    .order('tag');
+  const { data, error } = await supabase.rpc('get_distinct_tags', { p_country: countryCode, p_city: city, p_microzone: microzoneId });
   if (error) throw error;
-  const seen = new Set<string>();
-  return (data || []).filter(r => {
-    if (seen.has(r.tag)) return false;
-    seen.add(r.tag);
-    return true;
-  }).map(r => r.tag);
+  return (data || []).map((r: { tag: string }) => r.tag);
 }
 
 export async function getMetrics(
@@ -113,4 +75,13 @@ export async function updateLastLogin(email: string): Promise<void> {
     .update({ last_login: new Date().toISOString() })
     .eq('email', email);
   if (error) throw error;
+}
+
+export async function upsertUser(email: string, googleName: string): Promise<User> {
+  const existing = await getUserByEmail(email);
+  if (existing) {
+    await updateLastLogin(email);
+    return { ...existing, last_login: new Date().toISOString() };
+  }
+  return createUser(email, googleName);
 }
