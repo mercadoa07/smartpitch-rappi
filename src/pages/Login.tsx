@@ -13,7 +13,7 @@ export function Login() {
       provider: 'google',
       options: {
         redirectTo: window.location.origin,
-        hd: 'rappi.com',
+        queryParams: { hd: 'rappi.com' },
       },
     });
   };
