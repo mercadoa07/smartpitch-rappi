@@ -70,7 +70,7 @@ export function Login() {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-semibold text-dark">Correo</label>
             <input
-              type="email"
+              type="text"
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder="tu@rappi.com"
