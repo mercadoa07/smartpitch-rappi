@@ -1,13 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import type { Session, User as SupabaseUser } from '@supabase/supabase-js';
-import { supabase } from '../lib/supabase';
 import type { User } from '../types';
-import { upsertUser } from '../lib/queries';
+
+const STORAGE_KEY = 'smartpitch_user';
 
 interface AuthContextValue {
   user: User | null;
   setUser: (user: User | null) => void;
-  logout: () => Promise<void>;
+  logout: () => void;
   isLoading: boolean;
   authError: string | null;
 }
@@ -15,64 +14,38 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUserState] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [authError, setAuthError] = useState<string | null>(null);
-
-  const handleSession = async (authUser: SupabaseUser) => {
-    const email = authUser.email ?? '';
-    if (!email.endsWith('@rappi.com')) {
-      setAuthError('Solo se permiten correos @rappi.com');
-      await supabase.auth.signOut();
-      setUser(null);
-      setIsLoading(false);
-      return;
-    }
-    try {
-      const fullName =
-        authUser.user_metadata?.full_name ??
-        authUser.user_metadata?.name ??
-        '';
-      const dbUser = await upsertUser(email, fullName);
-      setUser(dbUser);
-      setAuthError(null);
-    } catch {
-      setAuthError('Error de conexión. Intenta nuevamente.');
-    }
-    setIsLoading(false);
-  };
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        handleSession(session.user);
-      } else {
-        setIsLoading(false);
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      try {
+        setUserState(JSON.parse(stored));
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
       }
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session: Session | null) => {
-        if (session?.user) {
-          await handleSession(session.user);
-        } else {
-          setUser(null);
-          setIsLoading(false);
-        }
-      }
-    );
-
-    return () => subscription.unsubscribe();
+    }
+    setIsLoading(false);
   }, []);
 
-  const logout = async () => {
-    await supabase.auth.signOut();
+  const setUser = (u: User | null) => {
+    setUserState(u);
+    if (u) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  };
+
+  const logout = () => {
+    localStorage.removeItem(STORAGE_KEY);
     localStorage.removeItem('smartpitch_negociacion');
-    setUser(null);
+    setUserState(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, isLoading, authError }}>
+    <AuthContext.Provider value={{ user, setUser, logout, isLoading, authError: null }}>
       {children}
     </AuthContext.Provider>
   );

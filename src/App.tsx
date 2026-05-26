@@ -1,8 +1,7 @@
-import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NegociacionProvider } from './context/NegociacionContext';
-import { ToastProvider } from './components/ui/Toast';
 
 import { Login } from './pages/Login';
 import { Home } from './pages/Home';
@@ -20,8 +19,8 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { user, isLoading } = useAuth();
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <span className="w-8 h-8 border-2 border-orange-200 border-t-[#FF5A00] rounded-full animate-spin block" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-light">
+        <span className="w-8 h-8 border-2 border-primary/30 border-t-primary rounded-full animate-spin block" />
       </div>
     );
   }
@@ -59,9 +58,17 @@ export default function App() {
     <BrowserRouter>
       <AuthProvider>
         <NegociacionProvider>
-          <ToastProvider>
-            <AppRoutes />
-          </ToastProvider>
+          <AppRoutes />
+          <Toaster
+            position="bottom-right"
+            toastOptions={{
+              style: {
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                fontSize: '14px',
+                fontWeight: '600',
+              },
+            }}
+          />
         </NegociacionProvider>
       </AuthProvider>
     </BrowserRouter>

@@ -1,26 +1,23 @@
-import React from 'react';
-
 interface ProgressBarProps {
   value: number;
   max: number;
   label?: string;
-  color?: string;
 }
 
-export function ProgressBar({ value, max, label, color = '#FF5A00' }: ProgressBarProps) {
+export function ProgressBar({ value, max, label }: ProgressBarProps) {
   const pct = max > 0 ? Math.round((value / max) * 100) : 0;
   return (
-    <div className="flex flex-col gap-1.5">
+    <div className="flex flex-col gap-2">
       {label && (
-        <div className="flex justify-between text-sm">
-          <span className="font-medium text-gray-700">{label}</span>
-          <span className="font-semibold" style={{ color }}>{value}/{max}</span>
+        <div className="flex justify-between items-center">
+          <span className="text-sm font-semibold text-dark">{label}</span>
+          <span className="text-sm font-semibold text-primary">{value}/{max}</span>
         </div>
       )}
-      <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
+      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
         <div
-          className="h-full rounded-full transition-all duration-500"
-          style={{ width: `${pct}%`, backgroundColor: color }}
+          className="h-full rounded-full bg-primary transition-all duration-500"
+          style={{ width: `${pct}%` }}
         />
       </div>
     </div>

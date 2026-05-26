@@ -1,5 +1,6 @@
-import React, { SelectHTMLAttributes } from 'react';
+import { SelectHTMLAttributes } from 'react';
 import { ChevronDown } from 'lucide-react';
+import { cn } from '../../lib/cn';
 
 interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   label?: string;
@@ -9,15 +10,22 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
   placeholder?: string;
 }
 
-export function Select({ label, error, loading, options, placeholder, className = '', ...props }: SelectProps) {
+export function Select({ label, error, loading, options, placeholder, className, ...props }: SelectProps) {
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="text-sm font-medium text-gray-700">{label}</label>
+        <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</label>
       )}
       <div className="relative">
         <select
-          className={`w-full px-4 py-3 pr-10 rounded-xl border border-gray-200 text-base bg-white focus:outline-none focus:ring-2 focus:ring-[#FF5A00] focus:border-transparent transition-all appearance-none disabled:bg-gray-50 disabled:text-gray-400 ${error ? 'border-red-400' : ''} ${className}`}
+          className={cn(
+            'w-full h-9 pl-3 pr-9 rounded-xl border border-gray-medium text-sm bg-white text-dark',
+            'focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary',
+            'appearance-none transition-colors',
+            'disabled:bg-gray-50 disabled:text-gray-400 disabled:cursor-not-allowed',
+            error && 'border-danger',
+            className
+          )}
           disabled={loading || props.disabled}
           {...props}
         >
@@ -28,15 +36,15 @@ export function Select({ label, error, loading, options, placeholder, className 
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
-        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+        <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
           {loading ? (
-            <span className="w-4 h-4 border-2 border-gray-300 border-t-[#FF5A00] rounded-full animate-spin block" />
+            <span className="w-3.5 h-3.5 border-2 border-gray-300 border-t-primary rounded-full animate-spin block" />
           ) : (
-            <ChevronDown size={18} />
+            <ChevronDown size={15} />
           )}
         </div>
       </div>
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && <p className="text-xs text-danger">{error}</p>}
     </div>
   );
 }

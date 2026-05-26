@@ -1,4 +1,5 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { cn } from '../../lib/cn';
 
 interface CardProps {
   children: ReactNode;
@@ -6,10 +7,14 @@ interface CardProps {
   onClick?: () => void;
 }
 
-export function Card({ children, className = '', onClick }: CardProps) {
+export function Card({ children, className, onClick }: CardProps) {
   return (
     <div
-      className={`bg-white rounded-xl border border-gray-100 shadow-sm p-4 ${onClick ? 'cursor-pointer hover:shadow-md transition-shadow' : ''} ${className}`}
+      className={cn(
+        'rounded-2xl border border-gray-100 bg-white shadow-sm',
+        onClick && 'cursor-pointer hover:border-primary/30 hover:shadow-lg transition-all duration-200',
+        className
+      )}
       onClick={onClick}
     >
       {children}

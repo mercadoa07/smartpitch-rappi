@@ -1,7 +1,8 @@
-import React, { ButtonHTMLAttributes, ReactNode } from 'react';
+import { ButtonHTMLAttributes, ReactNode } from 'react';
+import { cn } from '../../lib/cn';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  variant?: 'primary' | 'outline' | 'ghost' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   children: ReactNode;
   loading?: boolean;
@@ -13,31 +14,33 @@ export function Button({
   children,
   loading,
   disabled,
-  className = '',
+  className,
   ...props
 }: ButtonProps) {
-  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed';
+  const base = 'inline-flex items-center justify-center gap-2 font-semibold rounded-xl transition-colors active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed disabled:active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50';
+
   const variants = {
-    primary: 'bg-[#FF5A00] hover:bg-[#e54f00] text-white focus:ring-[#FF5A00]',
-    secondary: 'bg-white hover:bg-gray-50 text-gray-900 border border-gray-200 focus:ring-gray-300',
-    ghost: 'bg-transparent hover:bg-gray-100 text-gray-700 focus:ring-gray-300',
-    danger: 'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500',
+    primary: 'bg-primary hover:bg-primary-dark text-white',
+    outline: 'border border-gray-medium text-gray-700 hover:border-gray-300 hover:shadow-sm bg-white',
+    ghost: 'text-gray-600 hover:bg-gray-100',
+    danger: 'bg-danger hover:bg-red-600 text-white',
   };
+
   const sizes = {
-    sm: 'px-3 py-1.5 text-sm',
-    md: 'px-4 py-2.5 text-base',
-    lg: 'px-6 py-3 text-lg',
+    sm: 'h-8 px-3 text-xs',
+    md: 'h-10 px-4 text-sm',
+    lg: 'h-11 px-6 text-sm',
   };
 
   return (
     <button
-      className={`${base} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={cn(base, variants[variant], sizes[size], className)}
       disabled={disabled || loading}
       {...props}
     >
-      {loading ? (
-        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-      ) : null}
+      {loading && (
+        <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin shrink-0" />
+      )}
       {children}
     </button>
   );

@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Card } from '../components/ui/Card';
 import { AccordionItem } from '../components/ui/Accordion';
 import { useNegociacion } from '../context/NegociacionContext';
 import { COMISIONES } from '../data/comisiones';
 import { AlertTriangle } from 'lucide-react';
+import { cn } from '../lib/cn';
 
 const COUNTRIES = [
   { code: 'AR', name: 'Argentina' },
@@ -18,117 +19,109 @@ const COUNTRIES = [
 export function Comisiones() {
   const { negociacion, hasActiveNegociacion } = useNegociacion();
   const [selected, setSelected] = useState(negociacion.country_code || 'CO');
-
   const c = COMISIONES[selected];
-  const isFullExclusivo = hasActiveNegociacion && negociacion.country_code === selected && negociacion.tipo_servicio === 'full_service' && negociacion.tipo_acuerdo === 'exclusivo';
-  const isFullNoExclusivo = hasActiveNegociacion && negociacion.country_code === selected && negociacion.tipo_servicio === 'full_service' && negociacion.tipo_acuerdo === 'no_exclusivo';
-  const isMktExclusivo = hasActiveNegociacion && negociacion.country_code === selected && negociacion.tipo_servicio === 'marketplace' && negociacion.tipo_acuerdo === 'exclusivo';
-  const isMktNoExclusivo = hasActiveNegociacion && negociacion.country_code === selected && negociacion.tipo_servicio === 'marketplace' && negociacion.tipo_acuerdo === 'no_exclusivo';
+
+  const isActive = (servicio: 'full_service' | 'marketplace', acuerdo: 'exclusivo' | 'no_exclusivo') =>
+    hasActiveNegociacion && negociacion.country_code === selected &&
+    negociacion.tipo_servicio === servicio && negociacion.tipo_acuerdo === acuerdo;
 
   return (
     <AppLayout title="Comisiones">
-      <div className="px-4 py-5 max-w-2xl mx-auto flex flex-col gap-5">
+      <div className="space-y-6">
+
         {/* Aviso */}
-        <div className="flex items-start gap-3 bg-yellow-50 border border-yellow-200 rounded-xl p-3">
-          <AlertTriangle size={18} className="text-yellow-600 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-yellow-800">
-            <strong>Valores de referencia</strong> — pendiente validación para inside sales
+        <div className="flex items-start gap-3 bg-warning/10 border border-warning/30 rounded-xl p-4">
+          <AlertTriangle size={16} className="text-warning shrink-0 mt-0.5" />
+          <p className="text-sm text-warning font-semibold">
+            Valores de referencia — pendiente validación para inside sales
           </p>
         </div>
 
         {/* Tabs de país */}
         <div className="flex flex-wrap gap-2">
-          {COUNTRIES.map(c => (
+          {COUNTRIES.map(ctry => (
             <button
-              key={c.code}
-              onClick={() => setSelected(c.code)}
-              className={`px-4 py-2 rounded-full text-sm font-semibold transition-all ${
-                selected === c.code
-                  ? 'bg-[#FF5A00] text-white'
-                  : 'bg-white border border-gray-200 text-gray-600 hover:border-orange-300'
-              }`}
+              key={ctry.code}
+              onClick={() => setSelected(ctry.code)}
+              className={cn(
+                'px-4 h-9 rounded-xl text-sm font-semibold transition-all',
+                selected === ctry.code
+                  ? 'bg-primary text-white shadow-sm'
+                  : 'bg-white border border-gray-medium text-gray-600 hover:border-gray-300'
+              )}
             >
-              {c.name}
+              {ctry.name}
             </button>
           ))}
         </div>
 
         {/* Tabla */}
-        <Card className="!p-0 overflow-hidden">
-          <div className="grid grid-cols-3 bg-gray-50 border-b border-gray-200">
-            <div className="p-3 text-xs font-semibold text-gray-500 uppercase tracking-wide" />
-            <div className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wide text-center border-l border-gray-200">
-              Exclusivo
+        <Card>
+          <div className="grid grid-cols-3 bg-gray-light border-b border-gray-medium">
+            <div className="px-6 py-4" />
+            <div className="px-6 py-4 border-l border-gray-medium">
+              <p className="text-xs font-semibold uppercase tracking-wider text-dark text-center">Exclusivo</p>
             </div>
-            <div className="p-3 text-xs font-semibold text-gray-700 uppercase tracking-wide text-center border-l border-gray-200">
-              No exclusivo
+            <div className="px-6 py-4 border-l border-gray-medium">
+              <p className="text-xs font-semibold uppercase tracking-wider text-dark text-center">No exclusivo</p>
             </div>
           </div>
-
-          {/* Full Service */}
           <div className="grid grid-cols-3 border-b border-gray-100">
-            <div className="p-4">
-              <p className="font-semibold text-gray-900 text-sm">Full Service</p>
-              <p className="text-xs text-gray-400">Rappi reparte</p>
+            <div className="px-6 py-6">
+              <p className="text-sm font-semibold text-dark">Full Service</p>
+              <p className="text-xs text-gray-400 mt-1">Rappi reparte</p>
             </div>
-            <ComisionCell value={c?.fullExclusivo} highlight={isFullExclusivo} />
-            <ComisionCell value={c?.fullNoExclusivo} highlight={isFullNoExclusivo} borderLeft />
+            <ComisionCell value={c?.fullExclusivo} active={isActive('full_service', 'exclusivo')} />
+            <ComisionCell value={c?.fullNoExclusivo} active={isActive('full_service', 'no_exclusivo')} borderLeft />
           </div>
-
-          {/* Marketplace */}
           <div className="grid grid-cols-3">
-            <div className="p-4">
-              <p className="font-semibold text-gray-900 text-sm">Marketplace</p>
-              <p className="text-xs text-gray-400">Tú repartes</p>
+            <div className="px-6 py-6">
+              <p className="text-sm font-semibold text-dark">Marketplace</p>
+              <p className="text-xs text-gray-400 mt-1">Tú repartes</p>
             </div>
-            <ComisionCell value={c?.mktExclusivo} highlight={isMktExclusivo} />
-            <ComisionCell value={c?.mktNoExclusivo} highlight={isMktNoExclusivo} borderLeft />
+            <ComisionCell value={c?.mktExclusivo} active={isActive('marketplace', 'exclusivo')} />
+            <ComisionCell value={c?.mktNoExclusivo} active={isActive('marketplace', 'no_exclusivo')} borderLeft />
           </div>
         </Card>
 
         {hasActiveNegociacion && negociacion.country_code === selected && (
-          <p className="text-sm text-center text-orange-600 font-medium">
+          <p className="text-center text-xs text-primary font-semibold">
             ✓ Celda resaltada = configuración activa de la negociación
           </p>
         )}
 
         {/* Ventajas exclusividad */}
-        <AccordionItem title="Ventajas de ser exclusivo">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-start gap-3">
-              <span className="text-[#FF5A00] font-bold text-lg">↓</span>
-              <div>
-                <p className="font-semibold text-gray-900 text-sm">Menor comisión</p>
-                <p className="text-gray-500 text-sm">Ahorro de 2 puntos porcentuales en Full Service.</p>
+        <AccordionItem title="¿Por qué ser exclusivo?">
+          <div className="space-y-4 pt-1">
+            {[
+              { icon: '↓', title: 'Menor comisión', desc: 'Ahorro de 2 puntos porcentuales en Full Service.' },
+              { icon: '↑', title: 'Mejor posicionamiento', desc: 'Los restaurantes exclusivos aparecen primero en búsquedas de Rappi.' },
+              { icon: '★', title: 'Acceso prioritario a promociones', desc: 'Participación en campañas con mayor visibilidad y descuentos subsidiados.' },
+            ].map(item => (
+              <div key={item.title} className="flex items-start gap-4">
+                <span className="w-9 h-9 bg-primary/10 text-primary rounded-xl flex items-center justify-center font-extrabold text-lg shrink-0">{item.icon}</span>
+                <div>
+                  <p className="text-sm font-semibold text-dark">{item.title}</p>
+                  <p className="text-sm text-gray-500 mt-0.5">{item.desc}</p>
+                </div>
               </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-[#FF5A00] font-bold text-lg">↑</span>
-              <div>
-                <p className="font-semibold text-gray-900 text-sm">Mejor posicionamiento en el algoritmo</p>
-                <p className="text-gray-500 text-sm">Los restaurantes exclusivos aparecen más arriba en los resultados de búsqueda de Rappi.</p>
-              </div>
-            </div>
-            <div className="flex items-start gap-3">
-              <span className="text-[#FF5A00] font-bold text-lg">★</span>
-              <div>
-                <p className="font-semibold text-gray-900 text-sm">Acceso prioritario a promociones</p>
-                <p className="text-gray-500 text-sm">Participación en campañas de Rappi con mayor visibilidad y descuentos subsidiados.</p>
-              </div>
-            </div>
+            ))}
           </div>
         </AccordionItem>
+
       </div>
     </AppLayout>
   );
 }
 
-function ComisionCell({ value, highlight, borderLeft }: { value?: number; highlight?: boolean; borderLeft?: boolean }) {
+function ComisionCell({ value, active, borderLeft }: { value?: number; active?: boolean; borderLeft?: boolean }) {
   return (
-    <div className={`p-4 flex items-center justify-center ${borderLeft ? 'border-l border-gray-100' : ''} ${highlight ? 'bg-orange-50' : ''}`}>
-      <div className={`text-center ${highlight ? 'text-[#FF5A00]' : 'text-gray-900'}`}>
-        <span className={`text-2xl font-bold ${highlight ? 'text-[#FF5A00]' : ''}`}>{value ?? '-'}%</span>
-        {highlight && <p className="text-xs text-orange-500 font-medium mt-0.5">Tu acuerdo</p>}
+    <div className={cn('flex items-center justify-center py-6', borderLeft && 'border-l border-gray-100', active && 'bg-primary/5')}>
+      <div className="text-center">
+        <span className={cn('font-extrabold', active ? 'text-primary' : 'text-dark')} style={{ fontSize: 28 }}>
+          {value ?? '-'}%
+        </span>
+        {active && <p className="text-xs text-primary font-semibold mt-1">Tu acuerdo</p>}
       </div>
     </div>
   );

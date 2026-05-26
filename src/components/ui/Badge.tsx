@@ -1,25 +1,27 @@
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { cn } from '../../lib/cn';
 
 interface BadgeProps {
   children: ReactNode;
-  variant?: 'orange' | 'green' | 'blue' | 'gray' | 'red';
+  variant?: 'success' | 'danger' | 'warning' | 'info' | 'neutral' | 'primary';
   size?: 'sm' | 'md';
 }
 
-export function Badge({ children, variant = 'orange', size = 'sm' }: BadgeProps) {
+export function Badge({ children, variant = 'neutral', size = 'sm' }: BadgeProps) {
   const variants = {
-    orange: 'bg-orange-100 text-orange-700 border border-orange-200',
-    green: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
-    blue: 'bg-blue-100 text-blue-700 border border-blue-200',
-    gray: 'bg-gray-100 text-gray-600 border border-gray-200',
-    red: 'bg-red-100 text-red-700 border border-red-200',
+    success: 'bg-success/10 text-success',
+    danger: 'bg-danger/10 text-danger',
+    warning: 'bg-warning/10 text-warning',
+    info: 'bg-info/10 text-info',
+    neutral: 'bg-gray-100 text-gray-500',
+    primary: 'bg-primary/10 text-primary',
   };
   const sizes = {
-    sm: 'px-2 py-0.5 text-xs',
-    md: 'px-3 py-1 text-sm',
+    sm: 'px-2.5 py-1 text-xs',
+    md: 'px-3 py-1.5 text-sm',
   };
   return (
-    <span className={`inline-flex items-center font-semibold rounded-full ${variants[variant]} ${sizes[size]}`}>
+    <span className={cn('inline-flex items-center font-semibold rounded-full', variants[variant], sizes[size])}>
       {children}
     </span>
   );

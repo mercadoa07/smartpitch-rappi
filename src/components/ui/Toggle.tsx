@@ -1,4 +1,4 @@
-import React from 'react';
+import { cn } from '../../lib/cn';
 
 interface ToggleProps {
   label?: string;
@@ -9,19 +9,22 @@ interface ToggleProps {
 
 export function Toggle({ label, options, value, onChange }: ToggleProps) {
   return (
-    <div className="flex flex-col gap-1">
-      {label && <span className="text-sm font-medium text-gray-700">{label}</span>}
-      <div className="flex rounded-xl border border-gray-200 overflow-hidden bg-gray-50 p-1 gap-1">
+    <div className="flex flex-col gap-1.5">
+      {label && (
+        <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{label}</span>
+      )}
+      <div className="flex rounded-xl border border-gray-medium bg-gray-light p-1 gap-1">
         {options.map(opt => (
           <button
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`flex-1 py-2 px-3 text-sm font-semibold rounded-lg transition-all duration-200 ${
+            className={cn(
+              'flex-1 py-1.5 px-3 text-sm font-semibold rounded-lg transition-all duration-200',
               value === opt.value
-                ? 'bg-[#FF5A00] text-white shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+                ? 'bg-primary text-white shadow-sm'
+                : 'text-gray-500 hover:text-dark'
+            )}
           >
             {opt.label}
           </button>

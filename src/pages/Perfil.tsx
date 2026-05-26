@@ -1,41 +1,26 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useAuth } from '../context/AuthContext';
-import { updateUserName } from '../lib/queries';
-import { useToast } from '../components/ui/Toast';
+import { toast } from 'sonner';
+import { LogOut } from 'lucide-react';
 
 export function Perfil() {
   const navigate = useNavigate();
   const { user, setUser, logout } = useAuth();
-  const { showToast } = useToast();
   const [name, setName] = useState(user?.full_name || '');
-  const [loading, setLoading] = useState(false);
 
   const initials = user?.full_name
     ? user.full_name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
     : '?';
 
-  const handleSave = async () => {
+  const handleSave = () => {
     if (!name.trim() || !user) return;
-    setLoading(true);
-    try {
-      await updateUserName(user.email, name.trim());
-      setUser({ ...user, full_name: name.trim() });
-      showToast('Perfil actualizado');
-    } catch {
-      showToast('Error al actualizar', 'error');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
+    setUser({ ...user, full_name: name.trim() });
+    toast.success('Perfil actualizado');
   };
 
   const createdDate = user?.created_at
@@ -43,46 +28,40 @@ export function Perfil() {
     : '';
 
   return (
-    <AppLayout title="Perfil" showBack>
-      <div className="px-4 py-5 max-w-md mx-auto flex flex-col gap-5">
+    <AppLayout title="Perfil">
+      <div className="max-w-lg mx-auto space-y-6">
+
         {/* Avatar */}
-        <div className="flex flex-col items-center gap-3 py-4">
-          <div className="w-20 h-20 bg-[#FF5A00] text-white rounded-full flex items-center justify-center text-3xl font-bold">
+        <div className="flex flex-col items-center gap-4 py-4">
+          <div className="w-20 h-20 bg-primary/15 text-primary rounded-full flex items-center justify-center font-bold select-none" style={{ fontSize: 28 }}>
             {initials}
           </div>
           <div className="text-center">
-            <p className="font-bold text-gray-900 text-lg">{user?.full_name}</p>
-            <p className="text-gray-500 text-sm">{user?.email}</p>
-            {createdDate && <p className="text-gray-400 text-xs mt-1">Desde {createdDate}</p>}
+            <p className="text-xl font-bold text-dark">{user?.full_name}</p>
+            <p className="text-sm text-gray-500 mt-1">{user?.email}</p>
+            {createdDate && <p className="text-xs text-gray-400 mt-1">Miembro desde {createdDate}</p>}
           </div>
         </div>
 
-        {/* Editar nombre */}
-        <Card>
-          <h3 className="font-bold text-gray-900 mb-4">Editar perfil</h3>
-          <div className="flex flex-col gap-4">
-            <Input
-              label="Nombre completo"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Tu nombre completo"
-            />
-            <Input
-              label="Correo electrónico"
-              value={user?.email || ''}
-              disabled
-              className="bg-gray-50 text-gray-400"
-            />
-            <Button onClick={handleSave} loading={loading} className="w-full">
-              Guardar cambios
-            </Button>
+        {/* Editar */}
+        <Card className="p-6">
+          <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-5">Editar perfil</p>
+          <div className="space-y-4">
+            <Input label="Nombre completo" value={name} onChange={e => setName(e.target.value)} placeholder="Tu nombre completo" />
+            <Input label="Correo electrónico" value={user?.email || ''} disabled />
+            <Button onClick={handleSave} className="w-full">Guardar cambios</Button>
           </div>
         </Card>
 
-        {/* Cerrar sesión */}
-        <Button variant="danger" onClick={handleLogout} className="w-full">
-          Cerrar sesión
+        {/* Logout */}
+        <Button
+          variant="outline"
+          onClick={() => { logout(); navigate('/login'); }}
+          className="w-full gap-2 !text-danger !border-danger/30 hover:!bg-danger/5"
+        >
+          <LogOut size={16} /> Cerrar sesión
         </Button>
+
       </div>
     </AppLayout>
   );

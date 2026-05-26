@@ -1,59 +1,210 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { Home, MessageSquare, Shield, BarChart2, Calculator, CheckSquare, Zap } from 'lucide-react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import {
+  Home, MessageSquare, Shield, Calculator,
+  CheckSquare, Target, ChevronLeft, ChevronRight, X, LogOut
+} from 'lucide-react';
+import { cn } from '../../lib/cn';
+import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
-  { to: '/', icon: Home, label: 'Inicio' },
-  { to: '/pitch', icon: MessageSquare, label: 'Pitch' },
-  { to: '/objeciones', icon: Shield, label: 'Objeciones' },
-  { to: '/comisiones', icon: BarChart2, label: 'Comisiones' },
-  { to: '/calculadora', icon: Calculator, label: 'Calculadora' },
-  { to: '/requisitos', icon: CheckSquare, label: 'Requisitos' },
+  { to: '/', icon: Home, label: 'Inicio', end: true },
+  { to: '/negociacion', icon: Target, label: 'Negociación', end: false },
+  { to: '/pitch', icon: MessageSquare, label: 'Pitch', end: false },
+  { to: '/objeciones', icon: Shield, label: 'Objeciones', end: false },
+  { to: '/calculadora', icon: Calculator, label: 'Calculadora', end: false },
+  { to: '/requisitos', icon: CheckSquare, label: 'Requisitos', end: false },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  collapsed: boolean;
+  onToggle: () => void;
+  mobileOpen: boolean;
+  onMobileClose: () => void;
+}
+
+function SidebarContent({
+  collapsed = false,
+  isMobile = false,
+  onToggle,
+  onMobileClose,
+}: {
+  collapsed?: boolean;
+  isMobile?: boolean;
+  onToggle?: () => void;
+  onMobileClose?: () => void;
+}) {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  const wide = !collapsed || isMobile;
+
+  const initials = user?.full_name
+    ? user.full_name.split(' ').map(n => n[0]).slice(0, 2).join('').toUpperCase()
+    : '?';
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
-    <aside className="hidden md:flex flex-col w-56 bg-white border-r border-gray-200 h-screen sticky top-0 flex-shrink-0">
-      <div className="flex items-center gap-2 px-5 py-5 border-b border-gray-100">
-        <div className="w-8 h-8 bg-[#FF5A00] rounded-lg flex items-center justify-center">
-          <Zap size={16} className="text-white" />
-        </div>
-        <span className="font-bold text-gray-900 text-lg">SmartPitch</span>
+    <div className="flex flex-col h-full">
+      {/* ── Logo ── */}
+      <div
+        className={cn(
+          'flex items-center h-16 border-b border-white/10 shrink-0 px-5',
+          !wide && 'justify-center px-0'
+        )}
+      >
+        {wide ? (
+          <div className="flex-1 min-w-0" style={{ textAlign: 'center' }}>
+            <div className="flex items-center gap-2" style={{ justifyContent: 'center' }}>
+              <span
+                className="text-primary font-black leading-none"
+                style={{ fontSize: 24, letterSpacing: '-0.6px' }}
+              >
+                rappi
+              </span>
+              <span
+                className="bg-primary/20 text-primary font-bold rounded px-1.5 py-0.5 uppercase"
+                style={{ fontSize: 9, letterSpacing: '0.5px' }}
+              >
+                ASESOR
+              </span>
+            </div>
+            <p
+              className="text-white/30 uppercase mt-0.5"
+              style={{ fontSize: 10, letterSpacing: '1px' }}
+            >
+              Inside Sales
+            </p>
+          </div>
+        ) : (
+          <span
+            className="text-primary font-black"
+            style={{ fontSize: 20, letterSpacing: '-0.6px' }}
+          >
+            R
+          </span>
+        )}
+
+        {/* Toggle / Close */}
+        {isMobile ? (
+          <button onClick={onMobileClose} className="text-white/40 hover:text-white transition-colors ml-auto">
+            <X size={18} />
+          </button>
+        ) : (
+          <button
+            onClick={onToggle}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-colors shrink-0 ml-auto"
+          >
+            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+          </button>
+        )}
       </div>
 
-      <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
-        {NAV_ITEMS.map(({ to, icon: Icon, label }) => (
+      {/* ── Nav ── */}
+      <nav className="flex-1 py-6 px-4 overflow-y-auto" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => (
           <NavLink
             key={to}
             to={to}
-            end={to === '/'}
+            end={end}
+            onClick={isMobile ? onMobileClose : undefined}
             className={({ isActive }) =>
-              `flex items-center gap-3 px-3 py-2.5 rounded-xl font-medium transition-all text-sm ${
+              cn(
+                'relative flex items-center rounded-xl transition-colors duration-150 group',
+                wide ? 'gap-3 px-4 py-3.5 justify-center' : 'justify-center h-11 w-11 mx-auto',
                 isActive
-                  ? 'bg-orange-50 text-[#FF5A00]'
-                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-              }`
+                  ? 'bg-white/10 text-primary'
+                  : 'text-[#A0A0B0] hover:bg-white/5 hover:text-white'
+              )
             }
           >
-            <Icon size={18} strokeWidth={1.75} />
-            {label}
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span className="absolute left-0 inset-y-1 w-[3px] rounded-r-full bg-primary" />
+                )}
+                <Icon size={22} strokeWidth={isActive ? 2 : 1.75} className="shrink-0" />
+                {wide && (
+                  <span style={{ fontSize: 17 }} className="font-medium leading-none">
+                    {label}
+                  </span>
+                )}
+                {/* Tooltip en modo colapsado */}
+                {!wide && (
+                  <span className="absolute left-full ml-3 px-2 py-1 bg-[#0f0f1e] text-white text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg border border-white/10 transition-opacity">
+                    {label}
+                  </span>
+                )}
+              </>
+            )}
           </NavLink>
         ))}
       </nav>
 
-      <div className="px-3 pb-4 border-t border-gray-100 pt-3">
-        <NavLink
-          to="/negociacion"
-          className={({ isActive }) =>
-            `flex items-center gap-3 px-3 py-2.5 rounded-xl font-semibold text-sm transition-all w-full ${
-              isActive ? 'bg-[#FF5A00] text-white' : 'bg-orange-50 text-[#FF5A00] hover:bg-orange-100'
-            }`
-          }
-        >
-          <span>🎯</span>
-          Nueva negociación
-        </NavLink>
+      {/* ── Footer usuario ── */}
+      <div className="border-t border-white/10 py-4 px-4 shrink-0">
+        {wide ? (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center shrink-0 select-none" style={{ fontSize: 13 }}>
+              {initials}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-white font-semibold truncate" style={{ fontSize: 14 }}>{user?.full_name}</p>
+              <p className="text-white/30 truncate" style={{ fontSize: 12 }}>{user?.email}</p>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="text-white/30 hover:text-danger transition-colors shrink-0"
+              title="Cerrar sesión"
+            >
+              <LogOut size={15} />
+            </button>
+          </div>
+        ) : (
+          <button
+            onClick={handleLogout}
+            className="w-8 h-8 mx-auto flex items-center justify-center rounded-lg text-white/30 hover:text-danger hover:bg-white/5 transition-colors"
+          >
+            <LogOut size={15} />
+          </button>
+        )}
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
+  return (
+    <>
+      {/* Desktop */}
+      <aside
+        className={cn(
+          'hidden md:flex flex-col bg-dark h-screen sticky top-0 shrink-0 transition-all duration-300 ease-in-out',
+          collapsed ? 'w-[72px]' : 'w-56'
+        )}
+      >
+        <SidebarContent collapsed={collapsed} onToggle={onToggle} />
+      </aside>
+
+      {/* Mobile overlay */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+          onClick={onMobileClose}
+        />
+      )}
+
+      {/* Mobile drawer */}
+      <aside
+        className={cn(
+          'fixed left-0 top-0 h-full w-[260px] bg-dark z-50 flex flex-col transition-transform duration-300 md:hidden',
+          mobileOpen ? 'translate-x-0' : '-translate-x-full'
+        )}
+      >
+        <SidebarContent isMobile onMobileClose={onMobileClose} />
+      </aside>
+    </>
   );
 }

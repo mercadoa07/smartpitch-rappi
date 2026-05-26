@@ -1,63 +1,90 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import { MessageSquare, Shield, BarChart2, Calculator, CheckSquare, Target, ChevronRight } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { MessageSquare, Shield, Calculator, CheckSquare, Target, ChevronRight } from 'lucide-react';
 
 const SECTIONS = [
-  { to: '/pitch', icon: MessageSquare, label: 'Pitch', desc: 'Libreto dinámico', color: 'bg-blue-50 text-blue-600' },
-  { to: '/objeciones', icon: Shield, label: 'Objeciones', desc: '15 respuestas', color: 'bg-purple-50 text-purple-600' },
-  { to: '/comisiones', icon: BarChart2, label: 'Comisiones', desc: 'Tablas por país', color: 'bg-green-50 text-green-600' },
-  { to: '/calculadora', icon: Calculator, label: 'Calculadora', desc: 'Proyección de ganancias', color: 'bg-yellow-50 text-yellow-600' },
-  { to: '/requisitos', icon: CheckSquare, label: 'Requisitos', desc: 'Checklist de activación', color: 'bg-pink-50 text-pink-600' },
-  { to: '/propuesta', icon: Target, label: 'Propuesta', desc: 'Enviar por WhatsApp', color: 'bg-orange-50 text-orange-600' },
+  { to: '/pitch',       icon: MessageSquare, label: 'Pitch',       desc: 'Libreto dinámico',        iconBg: 'bg-blue-50   text-blue-500'   },
+  { to: '/objeciones',  icon: Shield,        label: 'Objeciones',  desc: '15 respuestas',           iconBg: 'bg-purple-50 text-purple-500' },
+  { to: '/calculadora', icon: Calculator,    label: 'Calculadora', desc: 'Proyección de ganancias', iconBg: 'bg-yellow-50 text-yellow-500' },
+  { to: '/requisitos',  icon: CheckSquare,   label: 'Requisitos',  desc: 'Checklist de activación', iconBg: 'bg-pink-50   text-pink-500'   },
+  { to: '/propuesta',   icon: Target,        label: 'Propuesta',   desc: 'Enviar por WhatsApp',     iconBg: 'bg-orange-50 text-primary'    },
 ];
 
 const STEPS = [
-  { num: 1, to: '/negociacion', label: 'Configura la negociación', desc: 'Ingresa los datos del restaurante' },
-  { num: 2, to: '/pitch', label: 'Usa el Pitch dinámico', desc: 'Guía tu discurso con datos reales' },
-  { num: 3, to: '/comisiones', label: 'Consulta las comisiones', desc: 'Ofrece el plan correcto' },
-  { num: 4, to: '/calculadora', label: 'Muestra la calculadora', desc: 'Proyecta las ganancias del aliado' },
-  { num: 5, to: '/propuesta', label: 'Envía la propuesta', desc: 'Valida requisitos y cierra por WhatsApp' },
+  { num: 1, to: '/negociacion', label: 'Configura la negociación',  desc: 'Ingresa los datos del restaurante'       },
+  { num: 2, to: '/pitch',       label: 'Usa el Pitch dinámico',     desc: 'Guía tu discurso con datos reales'       },
+  { num: 3, to: '/comisiones',  label: 'Consulta las comisiones',   desc: 'Ofrece el plan correcto'                 },
+  { num: 4, to: '/calculadora', label: 'Muestra la calculadora',    desc: 'Proyecta las ganancias del aliado'       },
+  { num: 5, to: '/propuesta',   label: 'Envía la propuesta',        desc: 'Valida requisitos y cierra por WhatsApp' },
 ];
 
 export function Home() {
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   return (
-    <AppLayout>
-      <div className="px-4 py-5 max-w-2xl mx-auto flex flex-col gap-6">
-        {/* CTA Principal */}
-        <Card className="bg-gradient-to-br from-[#FF5A00] to-[#e54f00] text-white border-0 !p-5">
-          <div className="flex items-start justify-between gap-4">
-            <div>
-              <p className="text-orange-100 text-sm font-medium mb-1">¿Lista para cerrar?</p>
-              <h2 className="text-xl font-bold mb-3">Inicia una negociación</h2>
-              <Button
-                onClick={() => navigate('/negociacion')}
-                variant="secondary"
-                size="sm"
-                className="!bg-white !text-[#FF5A00] border-0"
-              >
-                Comenzar →
-              </Button>
-            </div>
-            <div className="text-5xl opacity-20">🎯</div>
+    <AppLayout title="Inicio">
+
+      {/* Heading */}
+      <h1 className="text-2xl font-bold text-dark mb-2">
+        Hola, {user?.full_name?.split(' ')[0] || 'asesor'} 👋
+      </h1>
+      <p className="text-sm text-gray-500" style={{ marginBottom: 32 }}>
+        Tu herramienta de ventas para cerrar más restaurantes hoy.
+      </p>
+
+      {/* CTA */}
+      <div style={{ marginBottom: 64 }}>
+        <div
+          className="max-w-2xl rounded-2xl cursor-pointer shadow-sm hover:shadow-md transition-shadow"
+          style={{ background: 'linear-gradient(135deg, #FF441F 0%, #E63B1A 100%)', padding: '22px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 24, margin: '0 auto' }}
+          onClick={() => navigate('/negociacion')}
+        >
+          <div style={{ textAlign: 'center', flex: 1 }}>
+            <p className="text-white/70 font-medium uppercase tracking-wider" style={{ fontSize: 13, marginBottom: 8 }}>
+              ¿Lista para cerrar?
+            </p>
+            <h2 className="text-white font-bold" style={{ fontSize: 22, marginBottom: 16 }}>
+              Inicia una negociación
+            </h2>
+            <Button
+              variant="outline"
+              className="!bg-white !text-primary !border-transparent hover:!bg-white/90 font-semibold"
+              style={{ fontSize: 15, padding: '10px 24px', height: 'auto' }}
+              onClick={e => { e.stopPropagation(); navigate('/negociacion'); }}
+            >
+              Comenzar →
+            </Button>
           </div>
-        </Card>
+          <span style={{ fontSize: 80, opacity: 0.2 }} className="select-none hidden sm:block">🎯</span>
+        </div>
+      </div>
+
+      {/* Secciones */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 48 }}>
 
         {/* Accesos rápidos */}
         <div>
-          <h3 className="font-semibold text-gray-700 mb-3 text-sm uppercase tracking-wide">Accesos rápidos</h3>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {SECTIONS.map(({ to, icon: Icon, label, desc, color }) => (
-              <Card key={to} onClick={() => navigate(to)} className="!p-4">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${color}`}>
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
+            Accesos rápidos
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {SECTIONS.map(({ to, icon: Icon, label, desc, iconBg }) => (
+              <Card
+                key={to}
+                onClick={() => navigate(to)}
+                className="p-6 min-h-[140px] flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow"
+              >
+                <div className={`w-10 h-10 rounded-lg flex items-center justify-center mb-3 ${iconBg}`}>
                   <Icon size={20} />
                 </div>
-                <p className="font-semibold text-gray-900 text-sm">{label}</p>
-                <p className="text-gray-500 text-xs mt-0.5">{desc}</p>
+                <div>
+                  <p className="text-sm font-semibold text-dark">{label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
+                </div>
               </Card>
             ))}
           </div>
@@ -65,26 +92,30 @@ export function Home() {
 
         {/* Flujo recomendado */}
         <div>
-          <h3 className="font-semibold text-gray-700 mb-3 text-sm uppercase tracking-wide">Flujo recomendado</h3>
-          <div className="flex flex-col gap-2">
-            {STEPS.map(({ num, to, label, desc }) => (
+          <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">
+            Flujo recomendado
+          </p>
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            {STEPS.map(({ num, to, label, desc }, i) => (
               <button
                 key={num}
                 onClick={() => navigate(to)}
-                className="flex items-center gap-4 bg-white rounded-xl border border-gray-100 px-4 py-3.5 hover:border-orange-200 hover:bg-orange-50/30 transition-all text-left group"
+                className={`flex items-center gap-4 w-full text-left hover:bg-gray-50 transition-colors group rounded-lg px-2 ${i < STEPS.length - 1 ? 'border-b border-gray-100' : ''}`}
+                style={{ padding: '16px 8px' }}
               >
-                <div className="w-8 h-8 bg-[#FF5A00] text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-xs font-bold shrink-0">
                   {num}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 text-sm">{label}</p>
-                  <p className="text-gray-500 text-xs">{desc}</p>
+                  <p className="text-sm font-medium text-dark">{label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
                 </div>
-                <ChevronRight size={16} className="text-gray-300 group-hover:text-orange-400 flex-shrink-0" />
+                <ChevronRight size={16} className="text-gray-300 group-hover:text-primary shrink-0 transition-colors" />
               </button>
             ))}
           </div>
         </div>
+
       </div>
     </AppLayout>
   );

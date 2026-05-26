@@ -1,17 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap');
 @import "tailwindcss";
 
-:root {
-  --rappi-orange: #FF5A00;
-  --rappi-red: #E63329;
-  --bg-primary: #FAFAFA;
-  --bg-card: #FFFFFF;
-  --text-primary: #1A1A1A;
-  --text-secondary: #6B7280;
-  --success: #10B981;
-  --warning: #F59E0B;
-  --info: #3B82F6;
-  --border: #E5E7EB;
+@theme {
+  --color-primary: #FF441F;
+  --color-primary-dark: #E63B1A;
+  --color-dark: #1A1A2E;
+  --color-gray-light: #F5F5F5;
+  --color-gray-medium: #E0E0E0;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
 }
 
 * {
@@ -22,13 +23,18 @@
 
 body {
   font-family: 'Plus Jakarta Sans', sans-serif;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-  font-size: 16px;
-  line-height: 1.5;
+  background-color: #F9FAFB;
+  color: #1A1A2E;
+  font-size: 15px;
+  line-height: 1.65;
+  letter-spacing: 0.01em;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* TEST_MARKER_v2 */
 }
+
+/* DESIGN_TEST: si ves esto en DevTools, el CSS está llegando */
+.smartpitch-test { color: red; }
 
 #root {
   width: 100%;
@@ -36,12 +42,15 @@ body {
 }
 
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #f1f1f1;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: #d1d5db;
-  border-radius: 3px;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
