@@ -3,6 +3,7 @@ import { AppLayout } from '../components/layout/AppLayout';
 import { useNegociacion } from '../context/NegociacionContext';
 import { formatCurrency } from '../lib/currency';
 import { getComision } from '../data/comisiones';
+import { Receipt, TrendingUp, Percent, Wallet } from 'lucide-react';
 
 const IVA_RATES: Record<string, number> = {
   AR: 21, CL: 19, CO: 19, EC: 12, MX: 16, PE: 18,
@@ -91,18 +92,22 @@ export function Calculadora() {
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, textAlign: 'center' }}>Glosario</p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               <DefCard
+                icon={<Receipt size={13} strokeWidth={2.5} />}
                 term="Ticket promedio"
                 text="El valor medio que gasta cada cliente en un pedido. Subirlo —con combos, tamaños o sugerencias en el menú— es la palanca más rápida para crecer sin aumentar el volumen de pedidos."
               />
               <DefCard
+                icon={<TrendingUp size={13} strokeWidth={2.5} />}
                 term="Ingreso bruto mensual"
                 text="La facturación total antes de descontar comisiones e impuestos. Refleja el tamaño real del negocio en la plataforma: ticket × pedidos del mes."
               />
               <DefCard
+                icon={<Percent size={13} strokeWidth={2.5} />}
                 term={`IVA sobre la comisión (${ivaRate}%)`}
                 text="Impuesto al valor agregado que aplica sobre el servicio de intermediación cobrado por Rappi, según la tasa vigente en cada país."
               />
               <DefCard
+                icon={<Wallet size={13} strokeWidth={2.5} />}
                 term="Ingreso neto estimado"
                 text="Lo que efectivamente recibe el restaurante después de comisión e IVA. Este número debe cubrir costos de materia prima, nómina y operación para que el negocio sea rentable."
               />
@@ -154,7 +159,7 @@ function Row({ label, value, negative, muted }: { label: string; value: string; 
   );
 }
 
-function DefCard({ term, text }: { term: string; text: string }) {
+function DefCard({ icon, term, text }: { icon: React.ReactNode; term: string; text: string }) {
   return (
     <div style={{
       background: 'rgba(255,68,31,0.03)',
@@ -162,7 +167,8 @@ function DefCard({ term, text }: { term: string; text: string }) {
       borderRadius: 14,
       padding: '16px 18px',
     }}>
-      <p style={{ fontSize: 11, fontWeight: 700, color: '#FF441F', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6, margin: '0 0 6px 0' }}>
+      <p style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 11, fontWeight: 700, color: '#FF441F', textTransform: 'uppercase', letterSpacing: '0.07em', margin: '0 0 6px 0' }}>
+        <span style={{ display: 'flex', alignItems: 'center' }}>{icon}</span>
         {term}
       </p>
       <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>
