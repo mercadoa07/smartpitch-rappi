@@ -48,34 +48,67 @@ export function Calculadora() {
           <p style={{ fontSize: 14, color: '#9ca3af' }}>Proyecta los ingresos estimados del restaurante</p>
         </div>
 
-        {/* Parámetros */}
-        <div style={{ maxWidth: 480, margin: '0 auto' }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, textAlign: 'center' }}>Parámetros</p>
-          <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 18, padding: '40px 44px', display: 'flex', flexDirection: 'column', gap: 24 }}>
-            {hasActiveNegociacion && (
-              <div style={{ background: 'rgba(255,68,31,0.05)', border: '1px solid rgba(255,68,31,0.2)', borderRadius: 10, padding: '10px 16px', fontSize: 13, color: '#FF441F', fontWeight: 600, textAlign: 'center' }}>
-                Pre-llenado con datos de {negociacion.city} · {negociacion.tag}
-              </div>
-            )}
-            <NumberField label="Ticket promedio" value={ticket} onChange={setTicket} />
-            <NumberField label="Pedidos estimados por mes" value={pedidos} onChange={setPedidos} />
-            <NumberField label="Comisión Rappi (%)" value={comision} onChange={setComision} max={100} suffix="%" />
-          </div>
-        </div>
+        {/* Grid principal: calculadora (2 cols) + glosario (1 col) */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
 
-        {/* Resultados */}
-        <div style={{ maxWidth: 480, margin: '0 auto' }}>
-          <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, textAlign: 'center' }}>Proyección mensual</p>
-          <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 18, padding: '40px 44px', display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <Row label="Ingreso bruto mensual" value={fmt(ingresoBruto)} />
-            <Row label={`Comisión Rappi (${comision}%)`} value={`- ${fmt(comisionRappi)}`} negative />
-            <Row label={`IVA sobre comisión (${ivaRate}%)`} value={`- ${fmt(ivaComision)}`} negative />
-            <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A2E' }}>Ingreso neto estimado</span>
-              <span style={{ fontSize: 30, fontWeight: 800, color: '#10B981' }}>{fmt(ingresoNeto)}</span>
+          {/* Columna izquierda: parámetros + resultados */}
+          <div className="lg:col-span-2 space-y-8">
+
+            {/* Parámetros */}
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, textAlign: 'center' }}>Parámetros</p>
+              <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 18, padding: '40px 44px', display: 'flex', flexDirection: 'column', gap: 24 }}>
+                {hasActiveNegociacion && (
+                  <div style={{ background: 'rgba(255,68,31,0.05)', border: '1px solid rgba(255,68,31,0.2)', borderRadius: 10, padding: '10px 16px', fontSize: 13, color: '#FF441F', fontWeight: 600, textAlign: 'center' }}>
+                    Pre-llenado con datos de {negociacion.city} · {negociacion.tag}
+                  </div>
+                )}
+                <NumberField label="Ticket promedio" value={ticket} onChange={setTicket} />
+                <NumberField label="Pedidos estimados por mes" value={pedidos} onChange={setPedidos} />
+                <NumberField label="Comisión Rappi (%)" value={comision} onChange={setComision} max={100} suffix="%" />
+              </div>
             </div>
-            <Row label="Comisión + IVA por pedido" value={fmt(comisionPorPedido * (1 + ivaRate / 100))} muted />
+
+            {/* Resultados */}
+            <div>
+              <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, textAlign: 'center' }}>Proyección mensual</p>
+              <div style={{ background: 'white', border: '1px solid #e5e7eb', borderRadius: 18, padding: '40px 44px', display: 'flex', flexDirection: 'column', gap: 16 }}>
+                <Row label="Ingreso bruto mensual" value={fmt(ingresoBruto)} />
+                <Row label={`Comisión Rappi (${comision}%)`} value={`- ${fmt(comisionRappi)}`} negative />
+                <Row label={`IVA sobre comisión (${ivaRate}%)`} value={`- ${fmt(ivaComision)}`} negative />
+                <div style={{ borderTop: '1px solid #e5e7eb', paddingTop: 20, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <span style={{ fontSize: 15, fontWeight: 700, color: '#1A1A2E' }}>Ingreso neto estimado</span>
+                  <span style={{ fontSize: 30, fontWeight: 800, color: '#10B981' }}>{fmt(ingresoNeto)}</span>
+                </div>
+                <Row label="Comisión + IVA por pedido" value={fmt(comisionPorPedido * (1 + ivaRate / 100))} muted />
+              </div>
+            </div>
+
           </div>
+
+          {/* Columna derecha: glosario */}
+          <div className="lg:col-span-1">
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14, textAlign: 'center' }}>Glosario</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+              <DefCard
+                term="Ticket promedio"
+                text="El valor medio que gasta cada cliente en un pedido. Subirlo —con combos, tamaños o sugerencias en el menú— es la palanca más rápida para crecer sin aumentar el volumen de pedidos."
+              />
+              <DefCard
+                term="Ingreso bruto mensual"
+                text="La facturación total antes de descontar comisiones e impuestos. Refleja el tamaño real del negocio en la plataforma: ticket × pedidos del mes."
+              />
+              <DefCard
+                term={`IVA sobre la comisión (${ivaRate}%)`}
+                text="Impuesto al valor agregado que aplica sobre el servicio de intermediación cobrado por Rappi, según la tasa vigente en cada país."
+              />
+              <DefCard
+                term="Ingreso neto estimado"
+                text="Lo que efectivamente recibe el restaurante después de comisión e IVA. Este número debe cubrir costos de materia prima, nómina y operación para que el negocio sea rentable."
+              />
+            </div>
+          </div>
+
         </div>
 
         <p style={{ fontSize: 12, color: '#9ca3af', textAlign: 'center' }}>
@@ -117,6 +150,24 @@ function Row({ label, value, negative, muted }: { label: string; value: string; 
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <span style={{ fontSize: 14, color: muted ? '#9ca3af' : '#6b7280' }}>{label}</span>
       <span style={{ fontSize: 14, fontWeight: 700, color: negative ? '#EF4444' : muted ? '#9ca3af' : '#1A1A2E' }}>{value}</span>
+    </div>
+  );
+}
+
+function DefCard({ term, text }: { term: string; text: string }) {
+  return (
+    <div style={{
+      background: 'rgba(255,68,31,0.03)',
+      border: '1px solid rgba(255,68,31,0.12)',
+      borderRadius: 14,
+      padding: '16px 18px',
+    }}>
+      <p style={{ fontSize: 11, fontWeight: 700, color: '#FF441F', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 6, margin: '0 0 6px 0' }}>
+        {term}
+      </p>
+      <p style={{ fontSize: 13, color: '#6b7280', lineHeight: 1.6, margin: 0 }}>
+        {text}
+      </p>
     </div>
   );
 }
