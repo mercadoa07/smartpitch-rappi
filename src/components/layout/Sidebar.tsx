@@ -1,8 +1,8 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
-  Home, MessageSquare, Shield, Calculator,
-  CheckSquare, Target, ChevronLeft, ChevronRight, X, LogOut,
-  BookOpen, Lightbulb
+  Home, MessageSquare, ShieldAlert, Calculator,
+  ClipboardList, ChevronLeft, ChevronRight, X, LogOut,
+  BookOpen, Lightbulb, Handshake
 } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { useAuth } from '../../context/AuthContext';
@@ -10,11 +10,11 @@ import { useAuth } from '../../context/AuthContext';
 const NAV_ITEMS = [
   { to: '/',              icon: Home,          label: 'Inicio',        end: true  },
   { to: '/instrucciones', icon: BookOpen,       label: 'Instrucciones', end: false },
-  { to: '/negociacion',   icon: Target,         label: 'Negociación',   end: false },
+  { to: '/negociacion',   icon: Handshake,      label: 'Negociación',   end: false },
   { to: '/pitch',         icon: MessageSquare,  label: 'Pitch',         end: false },
-  { to: '/objeciones',    icon: Shield,         label: 'Objeciones',    end: false },
+  { to: '/objeciones',    icon: ShieldAlert,    label: 'Objeciones',    end: false },
   { to: '/calculadora',   icon: Calculator,     label: 'Calculadora',   end: false },
-  { to: '/requisitos',    icon: CheckSquare,    label: 'Requisitos',    end: false },
+  { to: '/requisitos',    icon: ClipboardList,  label: 'Requisitos',    end: false },
   { to: '/tips-ventas',   icon: Lightbulb,      label: 'Tips Ventas',   end: false },
 ];
 
@@ -49,42 +49,38 @@ function SidebarContent({
     navigate('/login');
   };
 
+  const SIDEBAR_BG = '#0B192C';
+
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
-        .sidebar-root { font-family: 'Poppins', sans-serif !important; }
-        .sidebar-root * { font-family: 'Poppins', sans-serif !important; }
+        .sidebar-root, .sidebar-root * { font-family: 'Poppins', sans-serif !important; }
       `}</style>
 
-      <div
-        className="sidebar-root flex flex-col h-full"
-        style={{ background: '#0a0a14' }}
-      >
+      <div className="sidebar-root flex flex-col h-full" style={{ background: SIDEBAR_BG }}>
 
         {/* ── Logo ── */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            height: 68,
-            borderBottom: '1px solid rgba(255,255,255,0.07)',
-            padding: wide ? '0 20px' : '0',
-            justifyContent: wide ? 'flex-start' : 'center',
-            flexShrink: 0,
-          }}
-        >
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          height: 68,
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          padding: wide ? '0 20px' : '0',
+          justifyContent: wide ? 'flex-start' : 'center',
+          flexShrink: 0,
+        }}>
           {wide ? (
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{
-                  fontSize: 26,
+                  fontSize: 24,
                   fontWeight: 900,
                   color: '#ffffff',
-                  letterSpacing: '-0.5px',
+                  letterSpacing: '-0.3px',
                   lineHeight: 1,
                 }}>
-                  rappi
+                  Rappi
                 </span>
                 <span style={{
                   background: 'rgba(255,68,31,0.18)',
@@ -101,7 +97,7 @@ function SidebarContent({
               </div>
               <p style={{
                 fontSize: 10,
-                color: 'rgba(255,255,255,0.25)',
+                color: 'rgba(255,255,255,0.30)',
                 letterSpacing: '1.5px',
                 textTransform: 'uppercase',
                 marginTop: 3,
@@ -110,7 +106,7 @@ function SidebarContent({
               </p>
             </div>
           ) : (
-            <span style={{ fontSize: 22, fontWeight: 900, color: '#ffffff', letterSpacing: '-0.5px' }}>
+            <span style={{ fontSize: 20, fontWeight: 900, color: '#ffffff', letterSpacing: '-0.3px' }}>
               R
             </span>
           )}
@@ -130,10 +126,15 @@ function SidebarContent({
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'rgba(255,255,255,0.35)', background: 'none', border: 'none',
                 cursor: 'pointer', flexShrink: 0, marginLeft: 'auto',
-                transition: 'background 0.15s, color 0.15s',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'none'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.35)'; }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.07)';
+                (e.currentTarget as HTMLButtonElement).style.color = '#fff';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'none';
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.35)';
+              }}
             >
               {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
             </button>
@@ -141,7 +142,14 @@ function SidebarContent({
         </div>
 
         {/* ── Nav ── */}
-        <nav style={{ flex: 1, overflowY: 'auto', padding: wide ? '14px 10px' : '14px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <nav style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: wide ? '14px 10px' : '14px 8px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+        }}>
           {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => (
             <NavLink
               key={to}
@@ -152,6 +160,7 @@ function SidebarContent({
             >
               {({ isActive }) => (
                 <div
+                  className="group"
                   style={{
                     position: 'relative',
                     display: 'flex',
@@ -165,7 +174,7 @@ function SidebarContent({
                     borderRadius: 12,
                     background: isActive ? '#FF441F' : 'transparent',
                     cursor: 'pointer',
-                    transition: 'background 0.18s, transform 0.12s',
+                    transition: 'background 0.18s',
                   }}
                   onMouseEnter={e => {
                     if (!isActive) (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.06)';
@@ -173,24 +182,24 @@ function SidebarContent({
                   onMouseLeave={e => {
                     if (!isActive) (e.currentTarget as HTMLDivElement).style.background = 'transparent';
                   }}
-                  className="group"
                 >
+                  {/* Ícono */}
                   <Icon
                     size={20}
-                    strokeWidth={isActive ? 2.5 : 1.8}
+                    strokeWidth={isActive ? 2.5 : 1.9}
                     style={{
                       flexShrink: 0,
                       color: isActive ? '#ffffff' : '#fb923c',
-                      transition: 'color 0.15s',
                     }}
                   />
+
+                  {/* Label */}
                   {wide && (
                     <span style={{
                       fontSize: 14,
                       fontWeight: isActive ? 700 : 500,
                       color: isActive ? '#ffffff' : '#94a3b8',
                       letterSpacing: '0.01em',
-                      transition: 'color 0.15s',
                       lineHeight: 1,
                     }}>
                       {label}
@@ -199,25 +208,27 @@ function SidebarContent({
 
                   {/* Tooltip modo colapsado */}
                   {!wide && (
-                    <span style={{
-                      position: 'absolute',
-                      left: 'calc(100% + 12px)',
-                      top: '50%',
-                      transform: 'translateY(-50%)',
-                      background: '#1e1e2e',
-                      color: '#fff',
-                      fontSize: 12,
-                      fontWeight: 600,
-                      borderRadius: 8,
-                      padding: '5px 10px',
-                      whiteSpace: 'nowrap',
-                      pointerEvents: 'none',
-                      zIndex: 50,
-                      boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
-                      border: '1px solid rgba(255,255,255,0.08)',
-                      opacity: 0,
-                    }}
+                    <span
                       className="group-hover:opacity-100"
+                      style={{
+                        position: 'absolute',
+                        left: 'calc(100% + 12px)',
+                        top: '50%',
+                        transform: 'translateY(-50%)',
+                        background: '#1e293b',
+                        color: '#fff',
+                        fontSize: 12,
+                        fontWeight: 600,
+                        borderRadius: 8,
+                        padding: '5px 10px',
+                        whiteSpace: 'nowrap',
+                        pointerEvents: 'none',
+                        zIndex: 50,
+                        boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                        border: '1px solid rgba(255,255,255,0.08)',
+                        opacity: 0,
+                        transition: 'opacity 0.15s',
+                      }}
                     >
                       {label}
                     </span>
@@ -229,7 +240,11 @@ function SidebarContent({
         </nav>
 
         {/* ── Footer usuario ── */}
-        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: wide ? '16px 14px' : '16px 8px', flexShrink: 0 }}>
+        <div style={{
+          borderTop: '1px solid rgba(255,255,255,0.08)',
+          padding: wide ? '16px 14px' : '16px 8px',
+          flexShrink: 0,
+        }}>
           {wide ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div style={{
@@ -256,11 +271,7 @@ function SidebarContent({
               <button
                 onClick={handleLogout}
                 title="Cerrar sesión"
-                style={{
-                  background: 'none', border: 'none', cursor: 'pointer',
-                  color: 'rgba(255,255,255,0.28)', flexShrink: 0, display: 'flex',
-                  transition: 'color 0.15s',
-                }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'rgba(255,255,255,0.28)', flexShrink: 0, display: 'flex' }}
                 onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}
                 onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.28)'; }}
               >
@@ -275,10 +286,15 @@ function SidebarContent({
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 borderRadius: 9, background: 'none', border: 'none', cursor: 'pointer',
                 color: 'rgba(255,255,255,0.28)',
-                transition: 'color 0.15s, background 0.15s',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.28)'; (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.color = '#f87171';
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.28)';
+                (e.currentTarget as HTMLButtonElement).style.background = 'none';
+              }}
             >
               <LogOut size={15} />
             </button>
@@ -291,6 +307,7 @@ function SidebarContent({
 }
 
 export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: SidebarProps) {
+  const SIDEBAR_BG = '#0B192C';
   return (
     <>
       {/* Desktop */}
@@ -299,7 +316,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           'hidden md:flex flex-col h-screen sticky top-0 shrink-0 transition-all duration-300 ease-in-out',
           collapsed ? 'w-[72px]' : 'w-[220px]'
         )}
-        style={{ background: '#0a0a14' }}
+        style={{ background: SIDEBAR_BG }}
       >
         <SidebarContent collapsed={collapsed} onToggle={onToggle} />
       </aside>
@@ -318,7 +335,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
           'fixed left-0 top-0 h-full w-[260px] z-50 flex flex-col transition-transform duration-300 md:hidden',
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
-        style={{ background: '#0a0a14' }}
+        style={{ background: SIDEBAR_BG }}
       >
         <SidebarContent isMobile onMobileClose={onMobileClose} />
       </aside>
