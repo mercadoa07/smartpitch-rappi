@@ -8,14 +8,14 @@ import { cn } from '../../lib/cn';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
-  { to: '/',             icon: Home,        label: 'Inicio',        end: true,  color: '#60a5fa' },
-  { to: '/instrucciones',icon: BookOpen,    label: 'Instrucciones', end: false, color: '#a78bfa' },
-  { to: '/negociacion',  icon: Target,      label: 'Negociación',   end: false, color: '#f97316' },
-  { to: '/pitch',        icon: MessageSquare,label: 'Pitch',        end: false, color: '#34d399' },
-  { to: '/objeciones',   icon: Shield,      label: 'Objeciones',    end: false, color: '#fb7185' },
-  { to: '/calculadora',  icon: Calculator,  label: 'Calculadora',   end: false, color: '#facc15' },
-  { to: '/requisitos',   icon: CheckSquare, label: 'Requisitos',    end: false, color: '#38bdf8' },
-  { to: '/tips-ventas',  icon: Lightbulb,   label: 'Tips Ventas',   end: false, color: '#4ade80' },
+  { to: '/',              icon: Home,          label: 'Inicio',        end: true  },
+  { to: '/instrucciones', icon: BookOpen,       label: 'Instrucciones', end: false },
+  { to: '/negociacion',   icon: Target,         label: 'Negociación',   end: false },
+  { to: '/pitch',         icon: MessageSquare,  label: 'Pitch',         end: false },
+  { to: '/objeciones',    icon: Shield,         label: 'Objeciones',    end: false },
+  { to: '/calculadora',   icon: Calculator,     label: 'Calculadora',   end: false },
+  { to: '/requisitos',    icon: CheckSquare,    label: 'Requisitos',    end: false },
+  { to: '/tips-ventas',   icon: Lightbulb,      label: 'Tips Ventas',   end: false },
 ];
 
 interface SidebarProps {
@@ -50,149 +50,243 @@ function SidebarContent({
   };
 
   return (
-    <div className="flex flex-col h-full" style={{ fontFamily: "'Poppins', sans-serif" }}>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+        .sidebar-root { font-family: 'Poppins', sans-serif !important; }
+        .sidebar-root * { font-family: 'Poppins', sans-serif !important; }
+      `}</style>
 
-      {/* ── Logo ── */}
       <div
-        className={cn(
-          'flex items-center h-16 border-b border-white/10 shrink-0 px-5',
-          !wide && 'justify-center px-0'
-        )}
+        className="sidebar-root flex flex-col h-full"
+        style={{ background: '#0a0a14' }}
       >
-        {wide ? (
-          <div className="flex-1 min-w-0" style={{ textAlign: 'center' }}>
-            <div className="flex items-center gap-2" style={{ justifyContent: 'center' }}>
-              <span
-                className="font-black leading-none"
-                style={{ fontSize: 24, letterSpacing: '-0.6px', color: '#ffffff' }}
-              >
-                rappi
-              </span>
-              <span
-                className="bg-primary/20 text-primary font-bold rounded px-1.5 py-0.5 uppercase"
-                style={{ fontSize: 9, letterSpacing: '0.5px' }}
-              >
-                ASESOR
-              </span>
-            </div>
-            <p
-              className="text-white/30 uppercase mt-0.5"
-              style={{ fontSize: 10, letterSpacing: '1px' }}
-            >
-              Inside Sales
-            </p>
-          </div>
-        ) : (
-          <span
-            className="font-black"
-            style={{ fontSize: 20, letterSpacing: '-0.6px', color: '#ffffff' }}
-          >
-            R
-          </span>
-        )}
 
-        {/* Toggle / Close */}
-        {isMobile ? (
-          <button onClick={onMobileClose} className="text-white/40 hover:text-white transition-colors ml-auto">
-            <X size={18} />
-          </button>
-        ) : (
-          <button
-            onClick={onToggle}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-colors shrink-0 ml-auto"
-          >
-            {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
-          </button>
-        )}
-      </div>
-
-      {/* ── Nav ── */}
-      <nav className="flex-1 py-6 px-4 overflow-y-auto" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        {NAV_ITEMS.map(({ to, icon: Icon, label, end, color }) => (
-          <NavLink
-            key={to}
-            to={to}
-            end={end}
-            onClick={isMobile ? onMobileClose : undefined}
-            className={({ isActive }) =>
-              cn(
-                'relative flex items-center rounded-xl transition-all duration-150 group',
-                wide ? 'gap-3 px-4 py-3 justify-start' : 'justify-center h-11 w-11 mx-auto',
-                isActive
-                  ? 'bg-white/10 text-white'
-                  : 'text-[#A0A0B0] hover:bg-white/5 hover:text-white'
-              )
-            }
-          >
-            {({ isActive }) => (
-              <>
-                {isActive && (
-                  <span className="absolute left-0 inset-y-1 w-[3px] rounded-r-full bg-primary" />
-                )}
-                <Icon
-                  size={20}
-                  strokeWidth={isActive ? 2.2 : 1.75}
-                  className="shrink-0"
-                  style={{ color: isActive ? color : undefined }}
-                />
-                {wide && (
-                  <span
-                    style={{ fontSize: 14, fontFamily: "'Poppins', sans-serif", fontWeight: isActive ? 600 : 400 }}
-                    className="leading-none"
-                  >
-                    {label}
-                  </span>
-                )}
-                {/* Tooltip en modo colapsado */}
-                {!wide && (
-                  <span className="absolute left-full ml-3 px-2 py-1 bg-[#0f0f1e] text-white text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg border border-white/10 transition-opacity"
-                    style={{ fontFamily: "'Poppins', sans-serif" }}
-                  >
-                    {label}
-                  </span>
-                )}
-              </>
-            )}
-          </NavLink>
-        ))}
-      </nav>
-
-      {/* ── Footer usuario ── */}
-      <div className="border-t border-white/10 py-4 px-4 shrink-0">
-        {wide ? (
-          <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center shrink-0 select-none"
-              style={{ fontSize: 13, fontFamily: "'Poppins', sans-serif" }}
-            >
-              {initials}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-semibold truncate" style={{ fontSize: 14, fontFamily: "'Poppins', sans-serif" }}>
-                {user?.full_name}
-              </p>
-              <p className="text-white/30 truncate" style={{ fontSize: 12, fontFamily: "'Poppins', sans-serif" }}>
-                {user?.email}
+        {/* ── Logo ── */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            height: 68,
+            borderBottom: '1px solid rgba(255,255,255,0.07)',
+            padding: wide ? '0 20px' : '0',
+            justifyContent: wide ? 'flex-start' : 'center',
+            flexShrink: 0,
+          }}
+        >
+          {wide ? (
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{
+                  fontSize: 26,
+                  fontWeight: 900,
+                  color: '#ffffff',
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1,
+                }}>
+                  rappi
+                </span>
+                <span style={{
+                  background: 'rgba(255,68,31,0.18)',
+                  color: '#FF441F',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  borderRadius: 5,
+                  padding: '3px 7px',
+                  letterSpacing: '0.6px',
+                  textTransform: 'uppercase',
+                }}>
+                  ASESOR
+                </span>
+              </div>
+              <p style={{
+                fontSize: 10,
+                color: 'rgba(255,255,255,0.25)',
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase',
+                marginTop: 3,
+              }}>
+                Inside Sales
               </p>
             </div>
+          ) : (
+            <span style={{ fontSize: 22, fontWeight: 900, color: '#ffffff', letterSpacing: '-0.5px' }}>
+              R
+            </span>
+          )}
+
+          {isMobile ? (
+            <button
+              onClick={onMobileClose}
+              style={{ color: 'rgba(255,255,255,0.35)', marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', display: 'flex' }}
+            >
+              <X size={18} />
+            </button>
+          ) : (
+            <button
+              onClick={onToggle}
+              style={{
+                width: 30, height: 30, borderRadius: 8,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: 'rgba(255,255,255,0.35)', background: 'none', border: 'none',
+                cursor: 'pointer', flexShrink: 0, marginLeft: 'auto',
+                transition: 'background 0.15s, color 0.15s',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.07)'; (e.currentTarget as HTMLButtonElement).style.color = '#fff'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = 'none'; (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.35)'; }}
+            >
+              {collapsed ? <ChevronRight size={15} /> : <ChevronLeft size={15} />}
+            </button>
+          )}
+        </div>
+
+        {/* ── Nav ── */}
+        <nav style={{ flex: 1, overflowY: 'auto', padding: wide ? '14px 10px' : '14px 8px', display: 'flex', flexDirection: 'column', gap: 2 }}>
+          {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              onClick={isMobile ? onMobileClose : undefined}
+              style={{ textDecoration: 'none' }}
+            >
+              {({ isActive }) => (
+                <div
+                  style={{
+                    position: 'relative',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: wide ? 12 : 0,
+                    justifyContent: wide ? 'flex-start' : 'center',
+                    padding: wide ? '13px 16px' : '0',
+                    width: wide ? 'auto' : 44,
+                    height: wide ? 'auto' : 44,
+                    margin: wide ? '0' : '0 auto',
+                    borderRadius: 12,
+                    background: isActive ? '#FF441F' : 'transparent',
+                    cursor: 'pointer',
+                    transition: 'background 0.18s, transform 0.12s',
+                  }}
+                  onMouseEnter={e => {
+                    if (!isActive) (e.currentTarget as HTMLDivElement).style.background = 'rgba(255,255,255,0.06)';
+                  }}
+                  onMouseLeave={e => {
+                    if (!isActive) (e.currentTarget as HTMLDivElement).style.background = 'transparent';
+                  }}
+                  className="group"
+                >
+                  <Icon
+                    size={20}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                    style={{
+                      flexShrink: 0,
+                      color: isActive ? '#ffffff' : '#fb923c',
+                      transition: 'color 0.15s',
+                    }}
+                  />
+                  {wide && (
+                    <span style={{
+                      fontSize: 14,
+                      fontWeight: isActive ? 700 : 500,
+                      color: isActive ? '#ffffff' : '#94a3b8',
+                      letterSpacing: '0.01em',
+                      transition: 'color 0.15s',
+                      lineHeight: 1,
+                    }}>
+                      {label}
+                    </span>
+                  )}
+
+                  {/* Tooltip modo colapsado */}
+                  {!wide && (
+                    <span style={{
+                      position: 'absolute',
+                      left: 'calc(100% + 12px)',
+                      top: '50%',
+                      transform: 'translateY(-50%)',
+                      background: '#1e1e2e',
+                      color: '#fff',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      borderRadius: 8,
+                      padding: '5px 10px',
+                      whiteSpace: 'nowrap',
+                      pointerEvents: 'none',
+                      zIndex: 50,
+                      boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+                      border: '1px solid rgba(255,255,255,0.08)',
+                      opacity: 0,
+                    }}
+                      className="group-hover:opacity-100"
+                    >
+                      {label}
+                    </span>
+                  )}
+                </div>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+
+        {/* ── Footer usuario ── */}
+        <div style={{ borderTop: '1px solid rgba(255,255,255,0.07)', padding: wide ? '16px 14px' : '16px 8px', flexShrink: 0 }}>
+          {wide ? (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 38, height: 38, borderRadius: '50%',
+                background: 'rgba(255,68,31,0.15)',
+                color: '#FF441F',
+                fontWeight: 700,
+                fontSize: 13,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                userSelect: 'none',
+                border: '1.5px solid rgba(255,68,31,0.3)',
+              }}>
+                {initials}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: '#ffffff', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user?.full_name}
+                </p>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.28)', margin: 0, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {user?.email}
+                </p>
+              </div>
+              <button
+                onClick={handleLogout}
+                title="Cerrar sesión"
+                style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  color: 'rgba(255,255,255,0.28)', flexShrink: 0, display: 'flex',
+                  transition: 'color 0.15s',
+                }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.28)'; }}
+              >
+                <LogOut size={15} />
+              </button>
+            </div>
+          ) : (
             <button
               onClick={handleLogout}
-              className="text-white/30 hover:text-danger transition-colors shrink-0"
-              title="Cerrar sesión"
+              style={{
+                width: 36, height: 36, margin: '0 auto',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                borderRadius: 9, background: 'none', border: 'none', cursor: 'pointer',
+                color: 'rgba(255,255,255,0.28)',
+                transition: 'color 0.15s, background 0.15s',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.color = '#f87171'; (e.currentTarget as HTMLButtonElement).style.background = 'rgba(255,255,255,0.05)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.color = 'rgba(255,255,255,0.28)'; (e.currentTarget as HTMLButtonElement).style.background = 'none'; }}
             >
               <LogOut size={15} />
             </button>
-          </div>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className="w-8 h-8 mx-auto flex items-center justify-center rounded-lg text-white/30 hover:text-danger hover:bg-white/5 transition-colors"
-          >
-            <LogOut size={15} />
-          </button>
-        )}
+          )}
+        </div>
+
       </div>
-    </div>
+    </>
   );
 }
 
@@ -202,9 +296,10 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       {/* Desktop */}
       <aside
         className={cn(
-          'hidden md:flex flex-col bg-dark h-screen sticky top-0 shrink-0 transition-all duration-300 ease-in-out',
-          collapsed ? 'w-[72px]' : 'w-56'
+          'hidden md:flex flex-col h-screen sticky top-0 shrink-0 transition-all duration-300 ease-in-out',
+          collapsed ? 'w-[72px]' : 'w-[220px]'
         )}
+        style={{ background: '#0a0a14' }}
       >
         <SidebarContent collapsed={collapsed} onToggle={onToggle} />
       </aside>
@@ -212,7 +307,7 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       {/* Mobile overlay */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 md:hidden"
           onClick={onMobileClose}
         />
       )}
@@ -220,9 +315,10 @@ export function Sidebar({ collapsed, onToggle, mobileOpen, onMobileClose }: Side
       {/* Mobile drawer */}
       <aside
         className={cn(
-          'fixed left-0 top-0 h-full w-[260px] bg-dark z-50 flex flex-col transition-transform duration-300 md:hidden',
+          'fixed left-0 top-0 h-full w-[260px] z-50 flex flex-col transition-transform duration-300 md:hidden',
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         )}
+        style={{ background: '#0a0a14' }}
       >
         <SidebarContent isMobile onMobileClose={onMobileClose} />
       </aside>
