@@ -1,18 +1,21 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, Shield, Calculator,
-  CheckSquare, Target, ChevronLeft, ChevronRight, X, LogOut
+  CheckSquare, Target, ChevronLeft, ChevronRight, X, LogOut,
+  BookOpen, Lightbulb
 } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
-  { to: '/', icon: Home, label: 'Inicio', end: true },
-  { to: '/negociacion', icon: Target, label: 'Negociación', end: false },
-  { to: '/pitch', icon: MessageSquare, label: 'Pitch', end: false },
-  { to: '/objeciones', icon: Shield, label: 'Objeciones', end: false },
-  { to: '/calculadora', icon: Calculator, label: 'Calculadora', end: false },
-  { to: '/requisitos', icon: CheckSquare, label: 'Requisitos', end: false },
+  { to: '/',             icon: Home,        label: 'Inicio',        end: true,  color: '#60a5fa' },
+  { to: '/instrucciones',icon: BookOpen,    label: 'Instrucciones', end: false, color: '#a78bfa' },
+  { to: '/negociacion',  icon: Target,      label: 'Negociación',   end: false, color: '#f97316' },
+  { to: '/pitch',        icon: MessageSquare,label: 'Pitch',        end: false, color: '#34d399' },
+  { to: '/objeciones',   icon: Shield,      label: 'Objeciones',    end: false, color: '#fb7185' },
+  { to: '/calculadora',  icon: Calculator,  label: 'Calculadora',   end: false, color: '#facc15' },
+  { to: '/requisitos',   icon: CheckSquare, label: 'Requisitos',    end: false, color: '#38bdf8' },
+  { to: '/tips-ventas',  icon: Lightbulb,   label: 'Tips Ventas',   end: false, color: '#4ade80' },
 ];
 
 interface SidebarProps {
@@ -47,7 +50,8 @@ function SidebarContent({
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" style={{ fontFamily: "'Poppins', sans-serif" }}>
+
       {/* ── Logo ── */}
       <div
         className={cn(
@@ -59,8 +63,8 @@ function SidebarContent({
           <div className="flex-1 min-w-0" style={{ textAlign: 'center' }}>
             <div className="flex items-center gap-2" style={{ justifyContent: 'center' }}>
               <span
-                className="text-primary font-black leading-none"
-                style={{ fontSize: 24, letterSpacing: '-0.6px' }}
+                className="font-black leading-none"
+                style={{ fontSize: 24, letterSpacing: '-0.6px', color: '#ffffff' }}
               >
                 rappi
               </span>
@@ -80,8 +84,8 @@ function SidebarContent({
           </div>
         ) : (
           <span
-            className="text-primary font-black"
-            style={{ fontSize: 20, letterSpacing: '-0.6px' }}
+            className="font-black"
+            style={{ fontSize: 20, letterSpacing: '-0.6px', color: '#ffffff' }}
           >
             R
           </span>
@@ -103,8 +107,8 @@ function SidebarContent({
       </div>
 
       {/* ── Nav ── */}
-      <nav className="flex-1 py-6 px-4 overflow-y-auto" style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-        {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => (
+      <nav className="flex-1 py-6 px-4 overflow-y-auto" style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        {NAV_ITEMS.map(({ to, icon: Icon, label, end, color }) => (
           <NavLink
             key={to}
             to={to}
@@ -112,10 +116,10 @@ function SidebarContent({
             onClick={isMobile ? onMobileClose : undefined}
             className={({ isActive }) =>
               cn(
-                'relative flex items-center rounded-xl transition-colors duration-150 group',
-                wide ? 'gap-3 px-4 py-3.5 justify-center' : 'justify-center h-11 w-11 mx-auto',
+                'relative flex items-center rounded-xl transition-all duration-150 group',
+                wide ? 'gap-3 px-4 py-3 justify-start' : 'justify-center h-11 w-11 mx-auto',
                 isActive
-                  ? 'bg-white/10 text-primary'
+                  ? 'bg-white/10 text-white'
                   : 'text-[#A0A0B0] hover:bg-white/5 hover:text-white'
               )
             }
@@ -125,15 +129,25 @@ function SidebarContent({
                 {isActive && (
                   <span className="absolute left-0 inset-y-1 w-[3px] rounded-r-full bg-primary" />
                 )}
-                <Icon size={22} strokeWidth={isActive ? 2 : 1.75} className="shrink-0" />
+                <Icon
+                  size={20}
+                  strokeWidth={isActive ? 2.2 : 1.75}
+                  className="shrink-0"
+                  style={{ color: isActive ? color : undefined }}
+                />
                 {wide && (
-                  <span style={{ fontSize: 17 }} className="font-medium leading-none">
+                  <span
+                    style={{ fontSize: 14, fontFamily: "'Poppins', sans-serif", fontWeight: isActive ? 600 : 400 }}
+                    className="leading-none"
+                  >
                     {label}
                   </span>
                 )}
                 {/* Tooltip en modo colapsado */}
                 {!wide && (
-                  <span className="absolute left-full ml-3 px-2 py-1 bg-[#0f0f1e] text-white text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg border border-white/10 transition-opacity">
+                  <span className="absolute left-full ml-3 px-2 py-1 bg-[#0f0f1e] text-white text-xs font-semibold rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none whitespace-nowrap z-50 shadow-lg border border-white/10 transition-opacity"
+                    style={{ fontFamily: "'Poppins', sans-serif" }}
+                  >
                     {label}
                   </span>
                 )}
@@ -147,12 +161,19 @@ function SidebarContent({
       <div className="border-t border-white/10 py-4 px-4 shrink-0">
         {wide ? (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center shrink-0 select-none" style={{ fontSize: 13 }}>
+            <div
+              className="w-10 h-10 rounded-full bg-primary/10 text-primary font-bold flex items-center justify-center shrink-0 select-none"
+              style={{ fontSize: 13, fontFamily: "'Poppins', sans-serif" }}
+            >
               {initials}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-white font-semibold truncate" style={{ fontSize: 14 }}>{user?.full_name}</p>
-              <p className="text-white/30 truncate" style={{ fontSize: 12 }}>{user?.email}</p>
+              <p className="text-white font-semibold truncate" style={{ fontSize: 14, fontFamily: "'Poppins', sans-serif" }}>
+                {user?.full_name}
+              </p>
+              <p className="text-white/30 truncate" style={{ fontSize: 12, fontFamily: "'Poppins', sans-serif" }}>
+                {user?.email}
+              </p>
             </div>
             <button
               onClick={handleLogout}
