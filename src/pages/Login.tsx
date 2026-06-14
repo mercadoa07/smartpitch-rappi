@@ -12,7 +12,6 @@ export function Login() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-
     const trimmedEmail = email.trim().toLowerCase();
     if (!trimmedEmail.endsWith('@rappi.com')) {
       setError('Solo se permiten correos @rappi.com');
@@ -22,7 +21,6 @@ export function Login() {
       setError('Ingresa tu nombre');
       return;
     }
-
     const user: User = {
       id: trimmedEmail,
       email: trimmedEmail,
@@ -34,62 +32,152 @@ export function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-dark flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-4 shadow-lg shadow-primary/30">
-            <Zap size={30} className="text-white" />
-          </div>
-          <h1 className="text-3xl font-extrabold text-white">SmartPitch</h1>
-          <p className="text-[#A0A0B0] text-sm mt-1">Rappi Inside Sales</p>
-        </div>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+        .login-root * { font-family: 'Poppins', sans-serif; }
+        .input-field {
+          border: 1px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 12px 16px;
+          font-size: 15px;
+          color: #1A1A2E;
+          outline: none;
+          width: 100%;
+          box-sizing: border-box;
+          transition: border-color 0.2s, box-shadow 0.2s;
+          background: #fafafa;
+          font-family: 'Poppins', sans-serif;
+        }
+        .input-field:focus {
+          border-color: #FF441F;
+          box-shadow: 0 0 0 3px rgba(255,68,31,0.1);
+          background: #fff;
+        }
+        .input-field::placeholder { color: #b0b0bf; }
+        .btn-primary {
+          width: 100%;
+          background: #FF441F;
+          color: white;
+          border: none;
+          border-radius: 12px;
+          padding: 14px;
+          font-size: 15px;
+          font-weight: 700;
+          cursor: pointer;
+          font-family: 'Poppins', sans-serif;
+          transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+          box-shadow: 0 4px 14px rgba(255,68,31,0.30);
+          margin-top: 4px;
+        }
+        .btn-primary:hover {
+          background: #e03a17;
+          transform: scale(1.01);
+          box-shadow: 0 6px 20px rgba(255,68,31,0.38);
+        }
+        .btn-primary:active { transform: scale(0.99); }
+      `}</style>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl p-6 shadow-2xl flex flex-col gap-4">
-          <div>
-            <h2 className="text-xl font-extrabold text-dark mb-1">Ingresa a tu cuenta</h2>
-            <p className="text-gray-400 text-sm">Usa tu correo corporativo @rappi.com</p>
-          </div>
+      <div
+        className="login-root min-h-screen flex items-center justify-center px-4"
+        style={{ background: '#f1f5f9' }}
+      >
+        <div style={{ width: '100%', maxWidth: 480 }}>
 
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg px-4 py-3 text-sm font-medium">
-              {error}
+          {/* Logo + nombre */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: 32 }}>
+            <div style={{
+              width: 68, height: 68,
+              background: '#FF441F',
+              borderRadius: 20,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              marginBottom: 16,
+              boxShadow: '0 8px 24px rgba(255,68,31,0.35)',
+            }}>
+              <Zap size={32} color="white" />
             </div>
-          )}
-
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-dark">Nombre</label>
-            <input
-              type="text"
-              value={name}
-              onChange={e => setName(e.target.value)}
-              placeholder="Tu nombre"
-              className="border border-gray-200 rounded-xl py-3 px-4 text-dark text-sm outline-none focus:border-primary transition-colors"
-            />
+            <h1 style={{ fontSize: 32, fontWeight: 800, color: '#1A1A2E', margin: 0, letterSpacing: '-0.5px' }}>
+              SmartPitch
+            </h1>
+            <p style={{ fontSize: 13, color: '#9ca3af', marginTop: 4, fontWeight: 500 }}>
+              Rappi Inside Sales
+            </p>
           </div>
 
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-semibold text-dark">Correo</label>
-            <input
-              type="text"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="tu@rappi.com"
-              className="border border-gray-200 rounded-xl py-3 px-4 text-dark text-sm outline-none focus:border-primary transition-colors"
-            />
+          {/* Tarjeta */}
+          <div style={{
+            background: 'white',
+            borderRadius: 28,
+            padding: '40px 44px',
+            boxShadow: '0 20px 60px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.06)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 22,
+          }}>
+
+            {/* Encabezado */}
+            <div>
+              <h2 style={{ fontSize: 20, fontWeight: 800, color: '#1A1A2E', margin: '0 0 6px 0' }}>
+                Ingresa a tu cuenta
+              </h2>
+              <p style={{ fontSize: 14, color: '#6b7280', margin: 0, lineHeight: 1.5 }}>
+                Smart Pitch: Tu herramienta de ventas para cerrar más restaurantes hoy.
+              </p>
+            </div>
+
+            {/* Error */}
+            {error && (
+              <div style={{
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                color: '#dc2626',
+                borderRadius: 10,
+                padding: '12px 16px',
+                fontSize: 14,
+                fontWeight: 500,
+              }}>
+                {error}
+              </div>
+            )}
+
+            {/* Campo nombre */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Nombre</label>
+              <input
+                className="input-field"
+                type="text"
+                value={name}
+                onChange={e => setName(e.target.value)}
+                placeholder="Tu nombre"
+              />
+            </div>
+
+            {/* Campo correo */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 7 }}>
+              <label style={{ fontSize: 13, fontWeight: 600, color: '#1A1A2E' }}>Correo corporativo</label>
+              <input
+                className="input-field"
+                type="text"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="tu@rappi.com"
+              />
+            </div>
+
+            {/* Botón */}
+            <button className="btn-primary" type="button" onClick={handleSubmit as any}>
+              Entrar
+            </button>
+
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-primary text-white rounded-xl py-3 font-bold text-sm hover:bg-primary/90 transition-colors mt-1"
-          >
-            Entrar
-          </button>
-        </form>
+          {/* Pie */}
+          <p style={{ textAlign: 'center', fontSize: 12, color: '#9ca3af', marginTop: 24, fontWeight: 500 }}>
+            Solo para el equipo de Inside Sales · Rappi
+          </p>
 
-        <p className="text-center text-xs text-[#A0A0B0] mt-6">
-          Solo para el equipo de Inside Sales · Rappi
-        </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
