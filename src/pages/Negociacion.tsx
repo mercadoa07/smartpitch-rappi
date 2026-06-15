@@ -14,6 +14,21 @@ import { COMISIONES } from '../data/comisiones';
 
 /* ─── Inline styles ─────────────────────────────────────────────────────── */
 const css = `
+  /* ── Force Poppins on every element in this screen ── */
+  .neg-root,
+  .neg-root *,
+  .neg-root select,
+  .neg-root input,
+  .neg-root button,
+  .neg-root label,
+  .neg-root p,
+  .neg-root h2,
+  .neg-root span,
+  .neg-root div {
+    font-family: 'Poppins', system-ui, -apple-system, sans-serif !important;
+  }
+
+  /* ── Split container ── */
   .neg-split {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -21,7 +36,7 @@ const css = `
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 20px 60px rgba(0,0,0,0.07), 0 4px 16px rgba(0,0,0,0.04);
-    max-width: 860px;
+    max-width: 900px;
     margin: 0 auto;
   }
 
@@ -62,24 +77,38 @@ const css = `
     grid-column: 1 / -1;
   }
 
-  /* Modern select / input override */
+  /* ── Input / Select overrides — larger padding, full width, Poppins ── */
   .neg-form-col select,
-  .neg-form-col input[type="text"] {
+  .neg-form-col input[type="text"],
+  .neg-form-col input:not([type]) {
+    font-family: 'Poppins', system-ui, sans-serif !important;
     border-radius: 12px !important;
     border: 1.5px solid #e5e7eb !important;
     transition: border-color 0.25s ease, box-shadow 0.25s ease !important;
     font-size: 14px !important;
-    padding: 11px 14px !important;
+    padding: 12px 16px !important;
     background: #fafafa !important;
     color: #1A1A2E !important;
     outline: none !important;
-    width: 100%;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    min-height: 46px !important;
   }
   .neg-form-col select:focus,
-  .neg-form-col input[type="text"]:focus {
+  .neg-form-col input[type="text"]:focus,
+  .neg-form-col input:not([type]):focus {
     border-color: #FF441F !important;
     box-shadow: 0 0 0 3px rgba(255,68,31,0.12) !important;
     background: #fff !important;
+  }
+  /* Label typography */
+  .neg-form-col label {
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    margin-bottom: 5px !important;
+    display: block;
   }
 
   /* ── Action buttons ── */
@@ -91,7 +120,9 @@ const css = `
     gap: 10px;
   }
 
+  /* Primary — stronger orange, deeper shadow */
   .btn-primary-rappi {
+    font-family: 'Poppins', system-ui, sans-serif !important;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -101,59 +132,59 @@ const css = `
     border-radius: 12px;
     font-size: 15px;
     font-weight: 800;
-    letter-spacing: 0.01em;
+    letter-spacing: 0.02em;
     color: #fff;
-    background: linear-gradient(135deg, #FF441F 0%, #ff6b42 100%);
+    background: linear-gradient(135deg, #E8360E 0%, #FF5A2C 100%);
     border: none;
     cursor: pointer;
     transition: all 0.25s ease;
-    box-shadow: 0 4px 14px rgba(255,68,31,0.30);
+    box-shadow: 0 6px 20px rgba(232,54,14,0.38);
     position: relative;
     overflow: hidden;
   }
   .btn-primary-rappi:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(255,68,31,0.40);
-    background: linear-gradient(135deg, #e63a18 0%, #ff5a30 100%);
+    box-shadow: 0 10px 28px rgba(232,54,14,0.48);
+    background: linear-gradient(135deg, #d12e0a 0%, #f04e22 100%);
   }
   .btn-primary-rappi:active:not(:disabled) {
     transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(255,68,31,0.25);
+    box-shadow: 0 3px 10px rgba(232,54,14,0.30);
   }
   .btn-primary-rappi:disabled {
-    opacity: 0.45;
+    opacity: 0.40;
     cursor: not-allowed;
     box-shadow: none;
   }
 
-  .btn-ghost-rappi {
-    background: none;
-    border: none;
-    cursor: pointer;
+  /* Secondary — soft gray pill, clearly subordinate */
+  .btn-secondary-rappi {
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    width: 100%;
+    padding: 11px 24px;
+    border-radius: 12px;
     font-size: 13px;
     font-weight: 600;
-    color: #9ca3af;
-    text-align: center;
-    padding: 4px 0;
-    transition: color 0.2s ease;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: transparent;
-    transition: color 0.2s ease, text-decoration-color 0.2s ease;
-  }
-  .btn-ghost-rappi:hover {
     color: #6b7280;
-    text-decoration-color: #d1d5db;
+    background: #f3f4f6;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    text-align: center;
+  }
+  .btn-secondary-rappi:hover {
+    background: #e5e7eb;
+    color: #374151;
   }
 
   /* ── Right column ── */
   .neg-context-col {
-    background: linear-gradient(150deg, #FF441F 0%, #ff6b42 55%, #ffb347 100%);
+    background: linear-gradient(150deg, #E8360E 0%, #FF5A2C 55%, #ffb347 100%);
     padding: 44px 36px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 28px;
+    gap: 26px;
     position: relative;
     overflow: hidden;
   }
@@ -181,28 +212,33 @@ const css = `
   }
 
   .ctx-icon-ring {
-    width: 56px;
-    height: 56px;
-    border-radius: 16px;
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
     background: rgba(255,255,255,0.18);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 26px;
     flex-shrink: 0;
   }
 
+  /* Headline — single line, slightly smaller to never wrap */
   .ctx-headline {
-    font-size: 22px;
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-size: 19px;
     font-weight: 900;
     color: #fff;
-    line-height: 1.2;
+    line-height: 1.15;
     margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .ctx-body {
-    font-size: 14px;
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-size: 13.5px;
     color: rgba(255,255,255,0.88);
     line-height: 1.65;
     font-weight: 500;
@@ -211,7 +247,7 @@ const css = `
   .ctx-steps {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 11px;
     position: relative;
     z-index: 1;
   }
@@ -219,37 +255,51 @@ const css = `
   .ctx-step {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 11px;
   }
 
+  /* Step number — pending state */
   .ctx-step-num {
     width: 26px;
     height: 26px;
     border-radius: 8px;
-    background: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.20);
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: 'Poppins', system-ui, sans-serif !important;
     font-size: 12px;
     font-weight: 800;
-    color: #fff;
+    color: rgba(255,255,255,0.75);
     flex-shrink: 0;
     margin-top: 1px;
+    transition: background 0.25s ease;
+  }
+
+  /* Step number — done state (class toggled in JSX) */
+  .ctx-step-num.done {
+    background: rgba(255,255,255,0.55);
   }
 
   .ctx-step-text {
+    font-family: 'Poppins', system-ui, sans-serif !important;
     font-size: 13px;
     font-weight: 600;
-    color: rgba(255,255,255,0.9);
+    color: rgba(255,255,255,0.78);
     line-height: 1.5;
+    transition: color 0.25s ease;
+  }
+  .ctx-step-text.done {
+    color: #fff;
   }
 
   .ctx-divider {
     border: none;
-    border-top: 1px solid rgba(255,255,255,0.2);
+    border-top: 1px solid rgba(255,255,255,0.20);
   }
 
   .ctx-badge {
+    font-family: 'Poppins', system-ui, sans-serif !important;
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -263,12 +313,53 @@ const css = `
     width: fit-content;
   }
 
-  /* ── Sections below ── */
+  /* ── Section titles below split ── */
   .neg-section-title {
+    font-family: 'Poppins', system-ui, sans-serif !important;
     font-size: 18px;
     font-weight: 700;
     color: #1A1A2E;
     margin-bottom: 16px;
+  }
+
+  /* ── Comisiones cards ── */
+  .com-card {
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 22px 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+  .com-card:hover {
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+    transform: translateY(-2px);
+  }
+  .com-card-label {
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-size: 11px;
+    /* Changed from #9ca3af to strong dark slate for legibility */
+    color: #1e293b;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 8px;
+  }
+  .com-card-value {
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-size: 32px;
+    font-weight: 800;
+    color: #FF441F;
+    line-height: 1;
+  }
+  .com-card-tag {
+    font-family: 'Poppins', system-ui, sans-serif !important;
+    font-size: 11px;
+    color: #10b981;
+    font-weight: 700;
+    margin-top: 6px;
   }
 
   /* ── Responsive ── */
@@ -287,8 +378,27 @@ const css = `
     .neg-form-col {
       padding: 32px 24px 28px;
     }
+    .ctx-headline {
+      white-space: normal;
+      font-size: 20px;
+    }
   }
 `;
+
+/* ─── Checklist steps ────────────────────────────────────────────────────── */
+const STEPS = [
+  { label: 'Elige país y ciudad objetivo' },
+  { label: 'Define la microzona de impacto' },
+  { label: 'Selecciona la categoría del negocio' },
+  { label: 'Diligencia el nombre del restaurante antes de lanzar el pitch ganador' },
+];
+
+/* ─── Check icon ─────────────────────────────────────────────────────────── */
+const CheckIcon = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF441F" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12" />
+  </svg>
+);
 
 export function Negociacion() {
   const navigate = useNavigate();
@@ -347,15 +457,22 @@ export function Negociacion() {
   const cc = negociacion.country_code;
   const hasAllFilters = !!(negociacion.country_code && negociacion.city && negociacion.microzone_id && negociacion.tag);
 
-  // Progress indicator for right panel
-  const filledCount = [negociacion.country_code, negociacion.city, negociacion.microzone_id, negociacion.tag].filter(Boolean).length;
+  // Step 4 (restaurant name) is done when all 4 selects are filled AND a name has been typed
+  const stepsDone = [
+    !!negociacion.country_code && !!negociacion.city,
+    !!negociacion.microzone_id,
+    !!negociacion.tag,
+    !!(negociacion.restaurant_name && negociacion.restaurant_name.trim().length > 0),
+  ];
+
+  const filledCount = stepsDone.filter(Boolean).length;
 
   return (
     <AppLayout title="Negociación">
-      {/* Inject styles */}
+      {/* Inject styles + Poppins font if not already loaded globally */}
       <style>{css}</style>
 
-      <div className="space-y-8">
+      <div className="neg-root space-y-8">
 
         {/* ── SPLIT SCREEN ─────────────────────────────────────────── */}
         <div className="neg-split">
@@ -419,7 +536,7 @@ export function Negociacion() {
               </div>
             </div>
 
-            {/* Actions — anchored bottom of form card */}
+            {/* Actions */}
             <div className="neg-actions">
               <button
                 className="btn-primary-rappi"
@@ -427,11 +544,11 @@ export function Negociacion() {
                 disabled={!hasAllFilters}
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12h14M12 5l7 7-7 7"/>
+                  <path d="M5 12h14M12 5l7 7-7 7" />
                 </svg>
                 Continuar al Pitch
               </button>
-              <button className="btn-ghost-rappi" onClick={clearNegociacion}>
+              <button className="btn-secondary-rappi" onClick={clearNegociacion}>
                 Limpiar negociación
               </button>
             </div>
@@ -439,14 +556,15 @@ export function Negociacion() {
 
           {/* ── RIGHT: Context panel ────────────────────────────────── */}
           <div className="neg-context-col">
+
             {/* Icon + headline */}
             <div style={{ position: 'relative', zIndex: 1 }}>
-              <div className="ctx-icon-ring" style={{ marginBottom: 18 }}>
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+              <div className="ctx-icon-ring" style={{ marginBottom: 16 }}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                 </svg>
               </div>
-              <p className="ctx-headline">Configura tu<br/>Oportunidad</p>
+              <p className="ctx-headline">🚀 Configura tu Oportunidad</p>
               <p className="ctx-body">
                 Selecciona los datos del restaurante para activar el motor de negociación. Personalizar estos campos nos permitirá diseñar el pitch perfecto y conquistar al aliado desde el primer minuto. 🙌
               </p>
@@ -454,24 +572,16 @@ export function Negociacion() {
 
             <hr className="ctx-divider" />
 
-            {/* Step list */}
+            {/* Step checklist — ALL completed steps show check icon, no numbers for done items */}
             <div className="ctx-steps">
-              {[
-                { label: 'Elige país y ciudad objetivo' },
-                { label: 'Define la microzona de impacto' },
-                { label: 'Selecciona la categoría del negocio' },
-                { label: 'Lanza el pitch ganador' },
-              ].map((step, i) => {
-                const done = i < filledCount;
+              {STEPS.map((step, i) => {
+                const done = stepsDone[i];
                 return (
                   <div className="ctx-step" key={i}>
-                    <div className="ctx-step-num" style={done ? { background: 'rgba(255,255,255,0.55)', color: '#FF441F' } : {}}>
-                      {done
-                        ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#FF441F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                        : i + 1
-                      }
+                    <div className={`ctx-step-num${done ? ' done' : ''}`}>
+                      {done ? <CheckIcon /> : i + 1}
                     </div>
-                    <p className="ctx-step-text" style={done ? { color: '#fff' } : {}}>{step.label}</p>
+                    <p className={`ctx-step-text${done ? ' done' : ''}`}>{step.label}</p>
                   </div>
                 );
               })}
@@ -483,9 +593,10 @@ export function Negociacion() {
             <div style={{ position: 'relative', zIndex: 1 }}>
               <div className="ctx-badge">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  <circle cx="12" cy="12" r="10" />
+                  <polyline points="12 6 12 12 16 14" />
                 </svg>
-                {filledCount} de 4 campos completados
+                {filledCount} de 4 pasos completados
               </div>
             </div>
           </div>
@@ -493,31 +604,23 @@ export function Negociacion() {
         {/* ── END SPLIT SCREEN ─────────────────────────────────────── */}
 
 
-        {/* ── Comisiones ───────────────────────────────────────────── */}
+        {/* ── Comisiones — mt-10 for breathing room ────────────────── */}
         {negociacion.country_code && COMISIONES[negociacion.country_code] && (() => {
           const c = COMISIONES[negociacion.country_code];
           return (
-            <div>
+            <div style={{ marginTop: 40 }}>
               <p className="neg-section-title">Comisiones disponibles</p>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12, maxWidth: 520, margin: '0 auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14, maxWidth: 540, margin: '0 auto' }}>
                 {[
                   { label: 'Full Service · Exclusivo', value: c.fullExclusivo, tag: 'Recomendado' },
                   { label: 'Full Service · No exclusivo', value: c.fullNoExclusivo },
                   { label: 'Marketplace · Exclusivo', value: c.mktExclusivo },
                   { label: 'Marketplace · No exclusivo', value: c.mktNoExclusivo },
                 ].map(({ label, value, tag }) => (
-                  <div key={label} style={{
-                    background: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: 14,
-                    padding: '20px',
-                    textAlign: 'center',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
-                    transition: 'box-shadow 0.2s ease',
-                  }}>
-                    <p style={{ fontSize: 11, color: '#9ca3af', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: 8 }}>{label}</p>
-                    <p style={{ fontSize: 32, fontWeight: 800, color: '#FF441F', lineHeight: 1 }}>{value}%</p>
-                    {tag && <p style={{ fontSize: 11, color: '#10b981', fontWeight: 700, marginTop: 6 }}>✓ {tag}</p>}
+                  <div key={label} className="com-card">
+                    <p className="com-card-label">{label}</p>
+                    <p className="com-card-value">{value}%</p>
+                    {tag && <p className="com-card-tag">✓ {tag}</p>}
                   </div>
                 ))}
               </div>
