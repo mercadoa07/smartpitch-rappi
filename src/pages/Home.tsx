@@ -35,7 +35,7 @@ const TIPS_TABS = [
   { id: 'whatsapp', label: 'WhatsApp',          icon: MessageCircle },
 ];
 
-const COUNTRIES = [
+const COUNTRIES: { code: string; flag: string }[] = [
   { code: 'CO', flag: '🇨🇴' },
   { code: 'MX', flag: '🇲🇽' },
   { code: 'AR', flag: '🇦🇷' },
@@ -75,11 +75,11 @@ const TIPS_CONTENT: Record<string, Record<string, string[]>> = {
    COMPONENT
 ───────────────────────────────────────────── */
 export function Home() {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  const navigate  = useNavigate();
+  const { user }  = useAuth();
 
-  const firstName = user?.full_name?.split(' ')[0] || 'asesor';
-  const isFemale  = user?.email?.includes('a.') || user?.email?.endsWith('a@rappi.com');
+  const firstName  = user?.full_name?.split(' ')[0] || 'asesor';
+  const isFemale   = user?.email?.includes('a.') || user?.email?.endsWith('a@rappi.com');
   const readyLabel = isFemale ? '¿Lista para vender? 🔥' : '¿Listo para vender? 🔥';
 
   const [activeTab,     setActiveTab]     = useState('llamadas');
@@ -96,6 +96,7 @@ export function Home() {
         .step-row-item:hover { background: rgba(255,68,31,0.05); border-radius: 14px; }
         .tip-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
         .tip-card:hover { box-shadow: 0 6px 20px rgba(255,100,30,0.12); transform: translateY(-1px); }
+        .country-tab { transition: all 0.15s ease; }
       `}</style>
 
       <AppLayout title="Inicio">
@@ -141,16 +142,10 @@ export function Home() {
             <button
               onClick={() => navigate('/negociacion')}
               style={{
-                background: '#FF441F',
-                color: '#fff',
-                border: 'none',
-                borderRadius: 14,
-                padding: '14px 30px',
-                fontSize: 15,
-                fontWeight: 700,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
+                background: '#FF441F', color: '#fff',
+                border: 'none', borderRadius: 14,
+                padding: '14px 30px', fontSize: 15, fontWeight: 700,
+                cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 boxShadow: '0 4px 16px rgba(255,68,31,0.35)',
                 transition: 'background 0.15s, transform 0.15s',
               }}
@@ -179,7 +174,10 @@ export function Home() {
               {STEPS.map((step, i) => {
                 const Icon = step.icon;
                 return (
-                  <div key={step.num} style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 'unset' }}>
+                  <div
+                    key={step.num}
+                    style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 'unset' }}
+                  >
                     <div
                       className="step-row-item"
                       onClick={() => navigate(step.to)}
@@ -228,16 +226,10 @@ export function Home() {
                   className="section-card"
                   onClick={() => navigate(to)}
                   style={{
-                    background: '#fff',
-                    border: '1px solid #f3f4f6',
-                    borderRadius: 20,
-                    padding: '22px 20px',
-                    cursor: 'pointer',
-                    textAlign: 'left',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 16,
-                    outline: 'none',
+                    background: '#fff', border: '1px solid #f3f4f6',
+                    borderRadius: 20, padding: '22px 20px',
+                    cursor: 'pointer', textAlign: 'left',
+                    display: 'flex', alignItems: 'center', gap: 16, outline: 'none',
                   }}
                 >
                   <div style={{
@@ -292,27 +284,36 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Tabs país — bandera + código, sin duplicar */}
-              <div style={{ display: 'flex', gap: 8, padding: '18px 20px 12px', flexWrap: 'wrap' }}>
-                {COUNTRIES.map(({ code, flag }) => (
-                  <button
-                    key={code}
-                    onClick={() => setActiveCountry(code)}
-                    style={{
-                      display: 'flex', alignItems: 'center', gap: 6,
-                      padding: '6px 14px', borderRadius: 30,
-                      border: activeCountry === code ? '2px solid #FF441F' : '1.5px solid #e5e7eb',
-                      background: activeCountry === code ? '#fff7ed' : '#fafafa',
-                      cursor: 'pointer', fontSize: 12,
-                      fontWeight: activeCountry === code ? 700 : 500,
-                      color: activeCountry === code ? '#FF441F' : '#6b7280',
-                      transition: 'all 0.15s',
-                    }}
-                  >
-                    <span style={{ fontSize: 16, lineHeight: 1 }}>{flag}</span>
-                    <span>{code}</span>
-                  </button>
-                ))}
+              {/* ── Tabs país: bandera + código, un solo span cada uno ── */}
+              <div style={{ display: 'flex', flexDirection: 'row', gap: 8, padding: '18px 20px 12px', flexWrap: 'nowrap', overflowX: 'auto' }}>
+                {COUNTRIES.map(({ code, flag }) => {
+                  const isActive = activeCountry === code;
+                  return (
+                    <button
+                      key={code}
+                      className="country-tab"
+                      onClick={() => setActiveCountry(code)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 5,
+                        padding: '6px 13px',
+                        borderRadius: 30,
+                        border: isActive ? '2px solid #FF441F' : '1.5px solid #e5e7eb',
+                        background: isActive ? '#fff7ed' : '#fafafa',
+                        cursor: 'pointer',
+                        fontSize: 12,
+                        fontWeight: isActive ? 700 : 500,
+                        color: isActive ? '#FF441F' : '#6b7280',
+                        whiteSpace: 'nowrap',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <span aria-hidden="true" style={{ fontSize: 15, lineHeight: 1 }}>{flag}</span>
+                      <span>{code}</span>
+                    </button>
+                  );
+                })}
               </div>
 
               {/* Tarjetas de tips — fondo naranja sutil */}
