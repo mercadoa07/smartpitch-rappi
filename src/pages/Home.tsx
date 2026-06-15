@@ -22,12 +22,16 @@ const SECTIONS = [
 ];
 
 const STEPS = [
-  { num: 1, to: '/negociacion', label: 'Conoce tu mercado',     icon: Target,        color: '#FF441F' },
-  { num: 2, to: '/pitch',       label: 'Domina tu pitch',       icon: MessageSquare, color: '#f97316' },
-  { num: 3, to: '/objeciones',  label: 'Maneja objeciones',     icon: ShieldAlert,   color: '#a855f7' },
-  { num: 4, to: '/propuesta',   label: 'Envía la propuesta',    icon: CheckSquare,   color: '#22c55e' },
-  { num: 5, to: '/tips-ventas', label: 'Revisa Tips de Ventas', icon: Lightbulb,     color: '#eab308' },
+  { num: 1, to: '/negociacion', label: 'Empieza tu negociación',      icon: Target,        color: '#FF441F', scrollToTips: false },
+  { num: 2, to: '/pitch',       label: 'Domina tu pitch',             icon: MessageSquare, color: '#f97316', scrollToTips: false },
+  { num: 3, to: '/objeciones',  label: 'Maneja objeciones',           icon: ShieldAlert,   color: '#a855f7', scrollToTips: false },
+  { num: 4, to: '/calculadora', label: 'Utiliza la calculadora',      icon: Calculator,    color: '#eab308', scrollToTips: false },
+  { num: 5, to: '/requisitos',  label: 'Ten presente los requisitos', icon: ClipboardList, color: '#ec4899', scrollToTips: false },
+  { num: 6, to: '',             label: 'Revisa tips de ventas',       icon: Lightbulb,     color: '#22c55e', scrollToTips: true  },
 ];
+
+const ROW_1 = STEPS.slice(0, 3);
+const ROW_2 = STEPS.slice(3, 6);
 
 const TIPS_TABS = [
   { id: 'llamadas', label: 'Llamadas en Frío', icon: Phone },
@@ -72,11 +76,71 @@ const TIPS_CONTENT: Record<string, Record<string, string[]>> = {
 };
 
 /* ─────────────────────────────────────────────
-   COMPONENT
+   SUB-COMPONENTE: una fila de pasos
+───────────────────────────────────────────── */
+function StepRow({
+  steps,
+  onNavigate,
+  onScrollToTips,
+}: {
+  steps: typeof STEPS;
+  onNavigate: (to: string) => void;
+  onScrollToTips: () => void;
+}) {
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      {steps.map((step, i) => {
+        const Icon = step.icon;
+        const isLast = i === steps.length - 1;
+        return (
+          <div
+            key={step.num}
+            style={{ display: 'flex', alignItems: 'center', flex: isLast ? 'unset' : 1 }}
+          >
+            {/* Item */}
+            <div
+              className="step-row-item"
+              onClick={() => step.scrollToTips ? onScrollToTips() : onNavigate(step.to)}
+              style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 12px', flexShrink: 0 }}
+            >
+              {/* Círculo numerado */}
+              <div style={{
+                width: 32, height: 32, borderRadius: '50%',
+                background: step.color,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                flexShrink: 0,
+                boxShadow: `0 3px 8px ${step.color}44`,
+              }}>
+                <span style={{ fontSize: 12, fontWeight: 800, color: '#fff' }}>{step.num}</span>
+              </div>
+              {/* Ícono + label */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                <Icon size={14} color={step.color} strokeWidth={2.2} style={{ flexShrink: 0 }} />
+                <span style={{ fontSize: 12, fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>
+                  {step.label}
+                </span>
+              </div>
+            </div>
+
+            {/* Flecha entre pasos */}
+            {!isLast && (
+              <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 12 }}>
+                <ArrowRight size={14} color="#d1d5db" strokeWidth={2} />
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
+   COMPONENTE PRINCIPAL
 ───────────────────────────────────────────── */
 export function Home() {
-  const navigate  = useNavigate();
-  const { user }  = useAuth();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const firstName  = user?.full_name?.split(' ')[0] || 'asesor';
   const isFemale   = user?.email?.includes('a.') || user?.email?.endsWith('a@rappi.com');
@@ -85,6 +149,10 @@ export function Home() {
   const [activeTab,     setActiveTab]     = useState('llamadas');
   const [activeCountry, setActiveCountry] = useState('CO');
 
+  const scrollToTips = () => {
+    document.getElementById('tips-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
+
   return (
     <>
       <style>{`
@@ -92,8 +160,8 @@ export function Home() {
         .home-root, .home-root * { font-family: 'Poppins', sans-serif !important; }
         .section-card { transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: none; }
         .section-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
-        .step-row-item { transition: background 0.18s; cursor: pointer; }
-        .step-row-item:hover { background: rgba(255,68,31,0.05); border-radius: 14px; }
+        .step-row-item { transition: background 0.18s; cursor: pointer; border-radius: 12px; }
+        .step-row-item:hover { background: rgba(255,68,31,0.05); }
         .tip-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
         .tip-card:hover { box-shadow: 0 6px 20px rgba(255,100,30,0.12); transform: translateY(-1px); }
         .country-tab { transition: all 0.15s ease; }
@@ -106,23 +174,16 @@ export function Home() {
               HERO / SALUDO
           ══════════════════════════════════════ */}
           <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 24,
-            marginBottom: 48,
-            padding: '32px 36px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: 24, marginBottom: 48, padding: '32px 36px',
             background: 'linear-gradient(130deg, #fff7ed 0%, #ffedd5 100%)',
-            borderRadius: 24,
-            border: '1px solid #fed7aa',
+            borderRadius: 24, border: '1px solid #fed7aa',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
               <div style={{
-                width: 56, height: 56, borderRadius: 18,
-                background: '#FF441F',
+                width: 56, height: 56, borderRadius: 18, background: '#FF441F',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 8px 20px rgba(255,68,31,0.30)',
-                flexShrink: 0,
+                boxShadow: '0 8px 20px rgba(255,68,31,0.30)', flexShrink: 0,
               }}>
                 <Sparkles size={28} color="#fff" />
               </div>
@@ -142,8 +203,7 @@ export function Home() {
             <button
               onClick={() => navigate('/negociacion')}
               style={{
-                background: '#FF441F', color: '#fff',
-                border: 'none', borderRadius: 14,
+                background: '#FF441F', color: '#fff', border: 'none', borderRadius: 14,
                 padding: '14px 30px', fontSize: 15, fontWeight: 700,
                 cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
                 boxShadow: '0 4px 16px rgba(255,68,31,0.35)',
@@ -163,51 +223,38 @@ export function Home() {
           </div>
 
           {/* ══════════════════════════════════════
-              INSTRUCCIONES — LÍNEA HORIZONTAL
+              INSTRUCCIONES — 2 FILAS DE 3 PASOS
           ══════════════════════════════════════ */}
           <div style={{ marginBottom: 52 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 18 }}>
               Instrucciones para utilizar la App
             </p>
 
-            <div style={{ display: 'flex', alignItems: 'center' }}>
-              {STEPS.map((step, i) => {
-                const Icon = step.icon;
-                return (
-                  <div
-                    key={step.num}
-                    style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 'unset' }}
-                  >
-                    <div
-                      className="step-row-item"
-                      onClick={() => navigate(step.to)}
-                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', flexShrink: 0 }}
-                    >
-                      <div style={{
-                        width: 34, height: 34, borderRadius: '50%',
-                        background: step.color,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0,
-                        boxShadow: `0 4px 10px ${step.color}44`,
-                      }}>
-                        <span style={{ fontSize: 13, fontWeight: 800, color: '#fff' }}>{step.num}</span>
-                      </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                        <Icon size={15} color={step.color} strokeWidth={2.2} style={{ flexShrink: 0 }} />
-                        <span style={{ fontSize: 13, fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>
-                          {step.label}
-                        </span>
-                      </div>
-                    </div>
+            <div style={{
+              background: '#fff',
+              border: '1px solid #f3f4f6',
+              borderRadius: 20,
+              padding: '20px 24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 6,
+            }}>
+              {/* Fila 1: pasos 1-2-3 */}
+              <StepRow
+                steps={ROW_1}
+                onNavigate={navigate}
+                onScrollToTips={scrollToTips}
+              />
 
-                    {i < STEPS.length - 1 && (
-                      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 20 }}>
-                        <ArrowRight size={16} color="#d1d5db" strokeWidth={2} />
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+              {/* Divisor entre filas */}
+              <div style={{ borderTop: '1px dashed #f3f4f6', margin: '6px 0' }} />
+
+              {/* Fila 2: pasos 4-5-6 */}
+              <StepRow
+                steps={ROW_2}
+                onNavigate={navigate}
+                onScrollToTips={scrollToTips}
+              />
             </div>
           </div>
 
@@ -226,17 +273,14 @@ export function Home() {
                   className="section-card"
                   onClick={() => navigate(to)}
                   style={{
-                    background: '#fff', border: '1px solid #f3f4f6',
-                    borderRadius: 20, padding: '22px 20px',
-                    cursor: 'pointer', textAlign: 'left',
+                    background: '#fff', border: '1px solid #f3f4f6', borderRadius: 20,
+                    padding: '22px 20px', cursor: 'pointer', textAlign: 'left',
                     display: 'flex', alignItems: 'center', gap: 16, outline: 'none',
                   }}
                 >
                   <div style={{
-                    width: 46, height: 46, borderRadius: 14,
-                    background: bg,
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    flexShrink: 0,
+                    width: 46, height: 46, borderRadius: 14, background: bg,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                   }}>
                     <Icon size={22} color={color} strokeWidth={2} />
                   </div>
@@ -253,7 +297,7 @@ export function Home() {
           {/* ══════════════════════════════════════
               TIPS DE VENTAS
           ══════════════════════════════════════ */}
-          <div>
+          <div id="tips-section">
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Tips de Ventas para Delivery · Venta en Frío
             </p>
@@ -284,8 +328,12 @@ export function Home() {
                 ))}
               </div>
 
-              {/* ── Tabs país: bandera + código, un solo span cada uno ── */}
-              <div style={{ display: 'flex', flexDirection: 'row', gap: 8, padding: '18px 20px 12px', flexWrap: 'nowrap', overflowX: 'auto' }}>
+              {/* Tabs país — bandera + código, sin duplicar */}
+              <div style={{
+                display: 'flex', flexDirection: 'row', gap: 8,
+                padding: '16px 20px 10px',
+                flexWrap: 'nowrap', overflowX: 'auto',
+              }}>
                 {COUNTRIES.map(({ code, flag }) => {
                   const isActive = activeCountry === code;
                   return (
@@ -294,19 +342,14 @@ export function Home() {
                       className="country-tab"
                       onClick={() => setActiveCountry(code)}
                       style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 5,
-                        padding: '6px 13px',
-                        borderRadius: 30,
+                        display: 'inline-flex', alignItems: 'center', gap: 5,
+                        padding: '6px 13px', borderRadius: 30,
                         border: isActive ? '2px solid #FF441F' : '1.5px solid #e5e7eb',
                         background: isActive ? '#fff7ed' : '#fafafa',
-                        cursor: 'pointer',
-                        fontSize: 12,
+                        cursor: 'pointer', fontSize: 12,
                         fontWeight: isActive ? 700 : 500,
                         color: isActive ? '#FF441F' : '#6b7280',
-                        whiteSpace: 'nowrap',
-                        flexShrink: 0,
+                        whiteSpace: 'nowrap', flexShrink: 0,
                       }}
                     >
                       <span aria-hidden="true" style={{ fontSize: 15, lineHeight: 1 }}>{flag}</span>
