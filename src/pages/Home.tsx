@@ -3,45 +3,45 @@ import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import {
-  MessageSquare, Shield, Calculator, CheckSquare, Target,
-  BookOpen, Lightbulb, ChevronRight, Sparkles,
-  Phone, MessageCircle, Database, ArrowRight
+  MessageSquare, ShieldAlert, Calculator, CheckSquare, Target,
+  Lightbulb, ChevronRight, Sparkles,
+  Phone, MessageCircle, Database, ArrowRight,
+  BookOpen, ClipboardList
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────
    DATA
 ───────────────────────────────────────────── */
 const SECTIONS = [
-  { to: '/pitch',        icon: MessageSquare, label: 'Pitch',        desc: 'Libreto dinámico',        bg: '#fff7ed', color: '#f97316' },
-  { to: '/objeciones',   icon: Shield,        label: 'Objeciones',   desc: '15 respuestas clave',     bg: '#faf5ff', color: '#a855f7' },
-  { to: '/calculadora',  icon: Calculator,    label: 'Calculadora',  desc: 'Proyección de ganancias', bg: '#fefce8', color: '#eab308' },
-  { to: '/requisitos',   icon: CheckSquare,   label: 'Requisitos',   desc: 'Checklist activación',    bg: '#fdf2f8', color: '#ec4899' },
-  { to: '/negociacion',  icon: Target,        label: 'Negociación',  desc: 'Configura tu deal',       bg: '#fff7ed', color: '#FF441F' },
-  { to: '/tips-ventas',  icon: Lightbulb,     label: 'Tips Ventas',  desc: 'Estrategias de cierre',   bg: '#f0fdf4', color: '#22c55e' },
+  { to: '/pitch',       icon: MessageSquare, label: 'Pitch',       desc: 'Libreto dinámico',        bg: '#fff7ed', color: '#f97316' },
+  { to: '/objeciones',  icon: ShieldAlert,   label: 'Objeciones',  desc: '15 respuestas clave',     bg: '#faf5ff', color: '#a855f7' },
+  { to: '/calculadora', icon: Calculator,    label: 'Calculadora', desc: 'Proyección de ganancias', bg: '#fefce8', color: '#eab308' },
+  { to: '/requisitos',  icon: ClipboardList, label: 'Requisitos',  desc: 'Checklist activación',    bg: '#fdf2f8', color: '#ec4899' },
+  { to: '/negociacion', icon: Target,        label: 'Negociación', desc: 'Configura tu deal',       bg: '#fff7ed', color: '#FF441F' },
+  { to: '/tips-ventas', icon: Lightbulb,     label: 'Tips Ventas', desc: 'Estrategias de cierre',   bg: '#f0fdf4', color: '#22c55e' },
 ];
 
 const STEPS = [
-  { num: 1, to: '/instrucciones', label: 'Revisa las instrucciones',  emoji: '📋' },
-  { num: 2, to: '/negociacion',   label: 'Empieza tu negociación',    emoji: '🎯' },
-  { num: 3, to: '/pitch',         label: 'Domina el pitch',           emoji: '🎤' },
-  { num: 4, to: '/objeciones',    label: 'Maneja objeciones',         emoji: '🛡️' },
-  { num: 5, to: '/propuesta',     label: 'Envía la propuesta',        emoji: '📨' },
-  { num: 6, to: '/tips-ventas',   label: 'Aprende Tips de Ventas',    emoji: '💡' },
+  { num: 1, to: '/negociacion',  label: 'Conoce tu mercado',    icon: Target,        color: '#FF441F' },
+  { num: 2, to: '/pitch',        label: 'Domina tu pitch',      icon: MessageSquare, color: '#f97316' },
+  { num: 3, to: '/objeciones',   label: 'Maneja objeciones',    icon: ShieldAlert,   color: '#a855f7' },
+  { num: 4, to: '/propuesta',    label: 'Envía la propuesta',   icon: CheckSquare,   color: '#22c55e' },
+  { num: 5, to: '/tips-ventas',  label: 'Revisa Tips de Ventas',icon: Lightbulb,     color: '#eab308' },
 ];
 
 const TIPS_TABS = [
-  { id: 'llamadas',  label: 'Llamadas en Frío', icon: Phone },
-  { id: 'hubspot',   label: 'HubSpot CRM',      icon: Database },
-  { id: 'whatsapp',  label: 'WhatsApp',          icon: MessageCircle },
+  { id: 'llamadas', label: 'Llamadas en Frío', icon: Phone },
+  { id: 'hubspot',  label: 'HubSpot CRM',      icon: Database },
+  { id: 'whatsapp', label: 'WhatsApp',          icon: MessageCircle },
 ];
 
 const COUNTRIES = [
-  { code: 'CO', flag: '🇨🇴', name: 'Colombia' },
-  { code: 'MX', flag: '🇲🇽', name: 'México' },
+  { code: 'CO', flag: '🇨🇴', name: 'Colombia'  },
+  { code: 'MX', flag: '🇲🇽', name: 'México'    },
   { code: 'AR', flag: '🇦🇷', name: 'Argentina' },
-  { code: 'CL', flag: '🇨🇱', name: 'Chile' },
-  { code: 'PE', flag: '🇵🇪', name: 'Perú' },
-  { code: 'EC', flag: '🇪🇨', name: 'Ecuador' },
+  { code: 'CL', flag: '🇨🇱', name: 'Chile'     },
+  { code: 'PE', flag: '🇵🇪', name: 'Perú'      },
+  { code: 'EC', flag: '🇪🇨', name: 'Ecuador'   },
 ];
 
 const TIPS_CONTENT: Record<string, Record<string, string[]>> = {
@@ -77,55 +77,67 @@ const TIPS_CONTENT: Record<string, Record<string, string[]>> = {
 export function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const firstName = user?.full_name?.split(' ')[0] || 'asesor';
 
-  const [activeTab, setActiveTab] = useState<string>('llamadas');
-  const [activeCountry, setActiveCountry] = useState<string>('CO');
+  const firstName = user?.full_name?.split(' ')[0] || 'asesor';
+  const isFemale = user?.email?.includes('a.') || user?.email?.endsWith('a@rappi.com');
+  const readyLabel = isFemale ? '¿Lista para vender? 🔥' : '¿Listo para vender? 🔥';
+
+  const [activeTab,     setActiveTab]     = useState('llamadas');
+  const [activeCountry, setActiveCountry] = useState('CO');
 
   return (
     <>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
         .home-root, .home-root * { font-family: 'Poppins', sans-serif !important; }
-        .step-card:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 12px 32px rgba(255,68,31,0.18); }
-        .section-card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.10); }
-        .step-card, .section-card { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .section-card { transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: none; }
+        .section-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
+        .step-row-item { transition: background 0.18s; cursor: pointer; }
+        .step-row-item:hover { background: rgba(255,68,31,0.05); border-radius: 14px; }
       `}</style>
 
       <AppLayout title="Inicio">
-        <div className="home-root" style={{ maxWidth: 1100, margin: '0 auto', paddingBottom: 60 }}>
+        <div className="home-root" style={{ maxWidth: 960, margin: '0 auto', paddingBottom: 72 }}>
 
-          {/* ── Bienvenida ── */}
+          {/* ══════════════════════════════════════
+              HERO / SALUDO
+          ══════════════════════════════════════ */}
           <div style={{
-            background: 'linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%)',
-            border: '1px solid #fed7aa',
-            borderRadius: 20,
-            padding: '28px 32px',
-            marginBottom: 36,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            gap: 20,
+            gap: 24,
+            marginBottom: 48,
+            padding: '32px 36px',
+            background: 'linear-gradient(130deg, #fff7ed 0%, #ffedd5 100%)',
+            borderRadius: 24,
+            border: '1px solid #fed7aa',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            {/* Ícono + texto */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
               <div style={{
-                width: 52, height: 52, borderRadius: 16,
+                width: 56, height: 56, borderRadius: 18,
                 background: '#FF441F',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
-                boxShadow: '0 6px 18px rgba(255,68,31,0.35)',
+                boxShadow: '0 8px 20px rgba(255,68,31,0.30)',
                 flexShrink: 0,
               }}>
-                <Sparkles size={26} color="#fff" />
+                <Sparkles size={28} color="#fff" />
               </div>
               <div>
-                <p style={{ fontSize: 20, fontWeight: 800, color: '#1A1A2E', margin: 0, lineHeight: 1.3 }}>
-                  Hola, {firstName}: Tu herramienta de ventas está lista para cerrar más restaurantes hoy.
+                <h1 style={{ fontSize: 24, fontWeight: 800, color: '#1A1A2E', margin: 0, lineHeight: 1.2 }}>
+                  ¡Hola, {firstName}! 👋
+                </h1>
+                <p style={{ fontSize: 14, color: '#78716c', margin: '5px 0 0 0', fontWeight: 500, lineHeight: 1.5 }}>
+                  Tu herramienta de ventas está lista para cerrar más restaurantes hoy.
                 </p>
-                <p style={{ fontSize: 15, fontWeight: 700, color: '#FF441F', margin: '6px 0 0 0' }}>
-                  ¿Listo para vender? 🔥
+                <p style={{ fontSize: 14, fontWeight: 700, color: '#FF441F', margin: '6px 0 0 0' }}>
+                  {readyLabel}
                 </p>
               </div>
             </div>
+
+            {/* CTA */}
             <button
               onClick={() => navigate('/negociacion')}
               style={{
@@ -133,129 +145,146 @@ export function Home() {
                 color: '#fff',
                 border: 'none',
                 borderRadius: 14,
-                padding: '14px 28px',
+                padding: '14px 30px',
                 fontSize: 15,
                 fontWeight: 700,
                 cursor: 'pointer',
                 whiteSpace: 'nowrap',
                 flexShrink: 0,
-                boxShadow: '0 4px 14px rgba(255,68,31,0.35)',
-                transition: 'background 0.15s',
+                boxShadow: '0 4px 16px rgba(255,68,31,0.35)',
+                transition: 'background 0.15s, transform 0.15s',
               }}
-              onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = '#e03a17'; }}
-              onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = '#FF441F'; }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#e03a17';
+                (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.02)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = '#FF441F';
+                (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
+              }}
             >
               Comenzar →
             </button>
           </div>
 
-          {/* ── Instrucciones horizontales ── */}
-          <div style={{ marginBottom: 48 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>
+          {/* ══════════════════════════════════════
+              INSTRUCCIONES — LÍNEA HORIZONTAL
+          ══════════════════════════════════════ */}
+          <div style={{ marginBottom: 52 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Instrucciones para utilizar la App
             </p>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto', paddingBottom: 8 }}>
-              {STEPS.map((step, i) => (
-                <div key={step.num} style={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-                  {/* Tarjeta del paso */}
-                  <button
-                    className="step-card"
-                    onClick={() => navigate(step.to)}
-                    style={{
-                      background: '#fff',
-                      border: '1.5px solid #fed7aa',
-                      borderRadius: 16,
-                      padding: '18px 16px',
-                      width: 148,
-                      cursor: 'pointer',
-                      textAlign: 'center',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: 8,
-                      outline: 'none',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
-                    }}
-                  >
-                    <div style={{
-                      width: 38, height: 38, borderRadius: '50%',
-                      background: '#fff7ed',
-                      border: '2px solid #FF441F',
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: 15, fontWeight: 900, color: '#FF441F',
-                    }}>
-                      {step.num}
-                    </div>
-                    <span style={{ fontSize: 18 }}>{step.emoji}</span>
-                    <p style={{ fontSize: 12, fontWeight: 600, color: '#1A1A2E', margin: 0, lineHeight: 1.4 }}>
-                      {step.label}
-                    </p>
-                  </button>
 
-                  {/* Flecha conectora */}
-                  {i < STEPS.length - 1 && (
-                    <div style={{ display: 'flex', alignItems: 'center', padding: '0 4px', flexShrink: 0 }}>
-                      <ArrowRight size={22} color="#fdba74" strokeWidth={2.5} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+              {STEPS.map((step, i) => {
+                const Icon = step.icon;
+                return (
+                  <div key={step.num} style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 'unset' }}>
+                    {/* Item */}
+                    <div
+                      className="step-row-item"
+                      onClick={() => navigate(step.to)}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 10,
+                        padding: '10px 14px',
+                        flexShrink: 0,
+                      }}
+                    >
+                      {/* Círculo numerado */}
+                      <div style={{
+                        width: 34, height: 34,
+                        borderRadius: '50%',
+                        background: step.color,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        flexShrink: 0,
+                        boxShadow: `0 4px 10px ${step.color}44`,
+                      }}>
+                        <span style={{ fontSize: 13, fontWeight: 800, color: '#fff' }}>{step.num}</span>
+                      </div>
+
+                      {/* Ícono + label */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <Icon size={15} color={step.color} strokeWidth={2.2} style={{ flexShrink: 0 }} />
+                        <span style={{ fontSize: 13, fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>
+                          {step.label}
+                        </span>
+                      </div>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {/* Flecha conectora */}
+                    {i < STEPS.length - 1 && (
+                      <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 20 }}>
+                        <ArrowRight size={16} color="#d1d5db" strokeWidth={2} />
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          {/* ── Accesos rápidos ── */}
-          <div style={{ marginBottom: 48 }}>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>
+          {/* ══════════════════════════════════════
+              ACCESOS RÁPIDOS
+          ══════════════════════════════════════ */}
+          <div style={{ marginBottom: 52 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Accesos rápidos
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 16 }}>
+
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: 20,
+            }}>
               {SECTIONS.map(({ to, icon: Icon, label, desc, bg, color }) => (
                 <button
                   key={to}
                   className="section-card"
                   onClick={() => navigate(to)}
                   style={{
-                    background: bg,
-                    border: `1.5px solid ${color}22`,
+                    background: '#fff',
+                    border: '1px solid #f3f4f6',
                     borderRadius: 20,
-                    padding: '22px 16px',
+                    padding: '22px 20px',
                     cursor: 'pointer',
-                    textAlign: 'center',
+                    textAlign: 'left',
                     display: 'flex',
-                    flexDirection: 'column',
                     alignItems: 'center',
-                    gap: 10,
+                    gap: 16,
                     outline: 'none',
-                    boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
                   }}
                 >
                   <div style={{
-                    width: 44, height: 44, borderRadius: 14,
-                    background: '#fff',
+                    width: 46, height: 46, borderRadius: 14,
+                    background: bg,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    boxShadow: `0 4px 12px ${color}33`,
+                    flexShrink: 0,
                   }}>
                     <Icon size={22} color={color} strokeWidth={2} />
                   </div>
-                  <div>
-                    <p style={{ fontSize: 13, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>{label}</p>
-                    <p style={{ fontSize: 11, color: '#6b7280', margin: '3px 0 0 0' }}>{desc}</p>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <p style={{ fontSize: 14, fontWeight: 700, color: '#1A1A2E', margin: 0 }}>{label}</p>
+                    <p style={{ fontSize: 12, color: '#9ca3af', margin: '3px 0 0 0' }}>{desc}</p>
                   </div>
-                  <ChevronRight size={14} color={color} style={{ marginTop: 2 }} />
+                  <ChevronRight size={16} color="#d1d5db" style={{ flexShrink: 0 }} />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* ── Tips de Ventas ── */}
+          {/* ══════════════════════════════════════
+              TIPS DE VENTAS
+          ══════════════════════════════════════ */}
           <div>
-            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 20 }}>
+            <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Tips de Ventas para Delivery · Venta en Frío
             </p>
 
-            <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: 20, overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.06)' }}>
+            <div style={{ background: '#fff', border: '1px solid #f3f4f6', borderRadius: 20, overflow: 'hidden' }}>
 
-              {/* Tabs de canal */}
+              {/* Tabs canal */}
               <div style={{ display: 'flex', borderBottom: '1px solid #f3f4f6', padding: '0 8px' }}>
                 {TIPS_TABS.map(({ id, label, icon: TabIcon }) => (
                   <button
@@ -265,8 +294,9 @@ export function Home() {
                       display: 'flex', alignItems: 'center', gap: 7,
                       padding: '16px 20px',
                       border: 'none', background: 'none', cursor: 'pointer',
-                      fontSize: 13, fontWeight: activeTab === id ? 700 : 500,
-                      color: activeTab === id ? '#FF441F' : '#6b7280',
+                      fontSize: 13,
+                      fontWeight: activeTab === id ? 700 : 500,
+                      color: activeTab === id ? '#FF441F' : '#9ca3af',
                       borderBottom: activeTab === id ? '2.5px solid #FF441F' : '2.5px solid transparent',
                       marginBottom: -1,
                       transition: 'color 0.15s',
@@ -278,9 +308,9 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Tabs de país */}
-              <div style={{ display: 'flex', gap: 8, padding: '16px 20px 8px', flexWrap: 'wrap' }}>
-                {COUNTRIES.map(({ code, flag, name }) => (
+              {/* Tabs país */}
+              <div style={{ display: 'flex', gap: 8, padding: '18px 20px 10px', flexWrap: 'wrap' }}>
+                {COUNTRIES.map(({ code, flag }) => (
                   <button
                     key={code}
                     onClick={() => setActiveCountry(code)}
@@ -301,51 +331,31 @@ export function Home() {
                 ))}
               </div>
 
-              {/* País seleccionado */}
-              <div style={{ padding: '8px 20px 20px' }}>
-                {(() => {
-                  const country = COUNTRIES.find(c => c.code === activeCountry)!;
-                  return (
-                    <div style={{
-                      background: '#fff7ed', borderRadius: 14, padding: '14px 18px', marginBottom: 14,
-                      display: 'flex', alignItems: 'center', gap: 10,
-                      border: '1px solid #fed7aa',
+              {/* Contenido tips */}
+              <div style={{ padding: '8px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+                {(TIPS_CONTENT[activeTab]?.[activeCountry] ?? []).map((tip, i) => (
+                  <div
+                    key={i}
+                    style={{
+                      display: 'flex', alignItems: 'flex-start', gap: 14,
+                      padding: '14px 16px',
+                      background: '#fafafa',
+                      border: '1px solid #f3f4f6',
+                      borderRadius: 14,
+                    }}
+                  >
+                    <span style={{
+                      width: 26, height: 26, borderRadius: '50%',
+                      background: '#FF441F', color: '#fff',
+                      fontSize: 11, fontWeight: 800,
+                      display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      flexShrink: 0, marginTop: 1,
                     }}>
-                      <span style={{ fontSize: 28 }}>{country.flag}</span>
-                      <div>
-                        <p style={{ fontSize: 13, fontWeight: 700, color: '#FF441F', margin: 0 }}>{country.name} · {country.code}</p>
-                        <p style={{ fontSize: 11, color: '#9a3412', margin: '2px 0 0 0' }}>
-                          {TIPS_TABS.find(t => t.id === activeTab)?.label}
-                        </p>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-                  {(TIPS_CONTENT[activeTab]?.[activeCountry] ?? []).map((tip, i) => (
-                    <div
-                      key={i}
-                      style={{
-                        display: 'flex', alignItems: 'flex-start', gap: 12,
-                        background: '#fff', border: '1px solid #f3f4f6',
-                        borderRadius: 12, padding: '12px 16px',
-                        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
-                      }}
-                    >
-                      <span style={{
-                        width: 24, height: 24, borderRadius: '50%',
-                        background: '#FF441F', color: '#fff',
-                        fontSize: 11, fontWeight: 800,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        flexShrink: 0, marginTop: 1,
-                      }}>
-                        {i + 1}
-                      </span>
-                      <p style={{ fontSize: 13, color: '#374151', margin: 0, lineHeight: 1.6 }}>{tip}</p>
-                    </div>
-                  ))}
-                </div>
+                      {i + 1}
+                    </span>
+                    <p style={{ fontSize: 13, color: '#374151', margin: 0, lineHeight: 1.65 }}>{tip}</p>
+                  </div>
+                ))}
               </div>
 
             </div>
