@@ -6,7 +6,7 @@ import {
   MessageSquare, ShieldAlert, Calculator, CheckSquare, Target,
   Lightbulb, ChevronRight, Sparkles,
   Phone, MessageCircle, Database, ArrowRight,
-  BookOpen, ClipboardList
+  ClipboardList
 } from 'lucide-react';
 
 /* ─────────────────────────────────────────────
@@ -22,11 +22,11 @@ const SECTIONS = [
 ];
 
 const STEPS = [
-  { num: 1, to: '/negociacion',  label: 'Conoce tu mercado',    icon: Target,        color: '#FF441F' },
-  { num: 2, to: '/pitch',        label: 'Domina tu pitch',      icon: MessageSquare, color: '#f97316' },
-  { num: 3, to: '/objeciones',   label: 'Maneja objeciones',    icon: ShieldAlert,   color: '#a855f7' },
-  { num: 4, to: '/propuesta',    label: 'Envía la propuesta',   icon: CheckSquare,   color: '#22c55e' },
-  { num: 5, to: '/tips-ventas',  label: 'Revisa Tips de Ventas',icon: Lightbulb,     color: '#eab308' },
+  { num: 1, to: '/negociacion', label: 'Conoce tu mercado',     icon: Target,        color: '#FF441F' },
+  { num: 2, to: '/pitch',       label: 'Domina tu pitch',       icon: MessageSquare, color: '#f97316' },
+  { num: 3, to: '/objeciones',  label: 'Maneja objeciones',     icon: ShieldAlert,   color: '#a855f7' },
+  { num: 4, to: '/propuesta',   label: 'Envía la propuesta',    icon: CheckSquare,   color: '#22c55e' },
+  { num: 5, to: '/tips-ventas', label: 'Revisa Tips de Ventas', icon: Lightbulb,     color: '#eab308' },
 ];
 
 const TIPS_TABS = [
@@ -36,12 +36,12 @@ const TIPS_TABS = [
 ];
 
 const COUNTRIES = [
-  { code: 'CO', flag: '🇨🇴', name: 'Colombia'  },
-  { code: 'MX', flag: '🇲🇽', name: 'México'    },
-  { code: 'AR', flag: '🇦🇷', name: 'Argentina' },
-  { code: 'CL', flag: '🇨🇱', name: 'Chile'     },
-  { code: 'PE', flag: '🇵🇪', name: 'Perú'      },
-  { code: 'EC', flag: '🇪🇨', name: 'Ecuador'   },
+  { code: 'CO', flag: '🇨🇴' },
+  { code: 'MX', flag: '🇲🇽' },
+  { code: 'AR', flag: '🇦🇷' },
+  { code: 'CL', flag: '🇨🇱' },
+  { code: 'PE', flag: '🇵🇪' },
+  { code: 'EC', flag: '🇪🇨' },
 ];
 
 const TIPS_CONTENT: Record<string, Record<string, string[]>> = {
@@ -79,7 +79,7 @@ export function Home() {
   const { user } = useAuth();
 
   const firstName = user?.full_name?.split(' ')[0] || 'asesor';
-  const isFemale = user?.email?.includes('a.') || user?.email?.endsWith('a@rappi.com');
+  const isFemale  = user?.email?.includes('a.') || user?.email?.endsWith('a@rappi.com');
   const readyLabel = isFemale ? '¿Lista para vender? 🔥' : '¿Listo para vender? 🔥';
 
   const [activeTab,     setActiveTab]     = useState('llamadas');
@@ -94,6 +94,8 @@ export function Home() {
         .section-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
         .step-row-item { transition: background 0.18s; cursor: pointer; }
         .step-row-item:hover { background: rgba(255,68,31,0.05); border-radius: 14px; }
+        .tip-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
+        .tip-card:hover { box-shadow: 0 6px 20px rgba(255,100,30,0.12); transform: translateY(-1px); }
       `}</style>
 
       <AppLayout title="Inicio">
@@ -113,7 +115,6 @@ export function Home() {
             borderRadius: 24,
             border: '1px solid #fed7aa',
           }}>
-            {/* Ícono + texto */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
               <div style={{
                 width: 56, height: 56, borderRadius: 18,
@@ -137,7 +138,6 @@ export function Home() {
               </div>
             </div>
 
-            {/* CTA */}
             <button
               onClick={() => navigate('/negociacion')}
               style={{
@@ -156,11 +156,11 @@ export function Home() {
               }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLButtonElement).style.background = '#e03a17';
-                (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1.02)';
+                (e.currentTarget as HTMLButtonElement).style.transform  = 'scale(1.02)';
               }}
               onMouseLeave={e => {
                 (e.currentTarget as HTMLButtonElement).style.background = '#FF441F';
-                (e.currentTarget as HTMLButtonElement).style.transform = 'scale(1)';
+                (e.currentTarget as HTMLButtonElement).style.transform  = 'scale(1)';
               }}
             >
               Comenzar →
@@ -175,27 +175,18 @@ export function Home() {
               Instrucciones para utilizar la App
             </p>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
               {STEPS.map((step, i) => {
                 const Icon = step.icon;
                 return (
                   <div key={step.num} style={{ display: 'flex', alignItems: 'center', flex: i < STEPS.length - 1 ? 1 : 'unset' }}>
-                    {/* Item */}
                     <div
                       className="step-row-item"
                       onClick={() => navigate(step.to)}
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 10,
-                        padding: '10px 14px',
-                        flexShrink: 0,
-                      }}
+                      style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '10px 14px', flexShrink: 0 }}
                     >
-                      {/* Círculo numerado */}
                       <div style={{
-                        width: 34, height: 34,
-                        borderRadius: '50%',
+                        width: 34, height: 34, borderRadius: '50%',
                         background: step.color,
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         flexShrink: 0,
@@ -203,8 +194,6 @@ export function Home() {
                       }}>
                         <span style={{ fontSize: 13, fontWeight: 800, color: '#fff' }}>{step.num}</span>
                       </div>
-
-                      {/* Ícono + label */}
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                         <Icon size={15} color={step.color} strokeWidth={2.2} style={{ flexShrink: 0 }} />
                         <span style={{ fontSize: 13, fontWeight: 600, color: '#374151', whiteSpace: 'nowrap' }}>
@@ -213,7 +202,6 @@ export function Home() {
                       </div>
                     </div>
 
-                    {/* Flecha conectora */}
                     {i < STEPS.length - 1 && (
                       <div style={{ flex: 1, display: 'flex', justifyContent: 'center', minWidth: 20 }}>
                         <ArrowRight size={16} color="#d1d5db" strokeWidth={2} />
@@ -233,11 +221,7 @@ export function Home() {
               Accesos rápidos
             </p>
 
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, 1fr)',
-              gap: 20,
-            }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
               {SECTIONS.map(({ to, icon: Icon, label, desc, bg, color }) => (
                 <button
                   key={to}
@@ -308,8 +292,8 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Tabs país */}
-              <div style={{ display: 'flex', gap: 8, padding: '18px 20px 10px', flexWrap: 'wrap' }}>
+              {/* Tabs país — bandera + código, sin duplicar */}
+              <div style={{ display: 'flex', gap: 8, padding: '18px 20px 12px', flexWrap: 'wrap' }}>
                 {COUNTRIES.map(({ code, flag }) => (
                   <button
                     key={code}
@@ -325,22 +309,23 @@ export function Home() {
                       transition: 'all 0.15s',
                     }}
                   >
-                    <span style={{ fontSize: 16 }}>{flag}</span>
-                    {code}
+                    <span style={{ fontSize: 16, lineHeight: 1 }}>{flag}</span>
+                    <span>{code}</span>
                   </button>
                 ))}
               </div>
 
-              {/* Contenido tips */}
-              <div style={{ padding: '8px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {/* Tarjetas de tips — fondo naranja sutil */}
+              <div style={{ padding: '4px 20px 24px', display: 'flex', flexDirection: 'column', gap: 10 }}>
                 {(TIPS_CONTENT[activeTab]?.[activeCountry] ?? []).map((tip, i) => (
                   <div
                     key={i}
+                    className="tip-card"
                     style={{
                       display: 'flex', alignItems: 'flex-start', gap: 14,
                       padding: '14px 16px',
-                      background: '#fafafa',
-                      border: '1px solid #f3f4f6',
+                      background: '#fff7ed',
+                      border: '1px solid #fed7aa',
                       borderRadius: 14,
                     }}
                   >
@@ -353,7 +338,7 @@ export function Home() {
                     }}>
                       {i + 1}
                     </span>
-                    <p style={{ fontSize: 13, color: '#374151', margin: 0, lineHeight: 1.65 }}>{tip}</p>
+                    <p style={{ fontSize: 13, color: '#92400e', margin: 0, lineHeight: 1.65 }}>{tip}</p>
                   </div>
                 ))}
               </div>
