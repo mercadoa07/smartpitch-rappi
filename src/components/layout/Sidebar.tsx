@@ -2,20 +2,19 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home, MessageSquare, ShieldAlert, Calculator,
   ClipboardList, ChevronLeft, ChevronRight, X, LogOut,
-  BookOpen, Lightbulb, Handshake
+  Handshake, FileText
 } from 'lucide-react';
 import { cn } from '../../lib/cn';
 import { useAuth } from '../../context/AuthContext';
 
 const NAV_ITEMS = [
-  { to: '/',              icon: Home,          label: 'Inicio',        end: true  },
-  { to: '/instrucciones', icon: BookOpen,       label: 'Instrucciones', end: false },
+  { to: '/',            icon: Home,           label: 'Inicio',       end: true  },
   { to: '/negociacion',   icon: Handshake,      label: 'Negociación',   end: false },
   { to: '/pitch',         icon: MessageSquare,  label: 'Pitch',         end: false },
   { to: '/objeciones',    icon: ShieldAlert,    label: 'Objeciones',    end: false },
+  { to: '/propuesta',     icon: FileText,       label: 'Propuesta',     end: false },
   { to: '/calculadora',   icon: Calculator,     label: 'Calculadora',   end: false },
   { to: '/requisitos',    icon: ClipboardList,  label: 'Requisitos',    end: false },
-  { to: '/tips-ventas',   icon: Lightbulb,      label: 'Tips Ventas',   end: false },
 ];
 
 interface SidebarProps {
@@ -91,8 +90,9 @@ function SidebarContent({
                   padding: '3px 7px',
                   letterSpacing: '0.6px',
                   textTransform: 'uppercase',
+                  whiteSpace: 'nowrap'
                 }}>
-                  ASESOR
+                  Smart Pitch
                 </span>
               </div>
               <p style={{
@@ -183,7 +183,7 @@ function SidebarContent({
                     if (!isActive) (e.currentTarget as HTMLDivElement).style.background = 'transparent';
                   }}
                 >
-                  {/* Ícono */}
+                  {/* Ícono Estilizado Fino */}
                   <Icon
                     size={20}
                     strokeWidth={isActive ? 2.5 : 1.9}
