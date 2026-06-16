@@ -6,9 +6,7 @@ import { useNegociacion } from '../context/NegociacionContext';
 import { formatCurrency } from '../lib/currency';
 import { OBJECIONES } from '../data/objeciones';
 import {
-  Search, X, MessageCircle, TrendingUp, ShieldCheck, ArrowRight,
-  Percent, Clock, Lock, DollarSign, Star, BarChart2, Truck,
-  HelpCircle, AlertTriangle, ThumbsDown, Users, Zap
+  Search, X, MessageCircle, TrendingUp, ArrowRight, Zap
 } from 'lucide-react';
 
 /* ─── Inline styles ─────────────────────────────────────────────────────── */
@@ -75,9 +73,10 @@ const css = `
     overflow-y: auto;
     padding-right: 2px;
   }
-  .obj-list::-webkit-scrollbar { width: 4px; }
+  .obj-list::-webkit-scrollbar { width: 4px; height: 0px; }
   .obj-list::-webkit-scrollbar-track { background: transparent; }
   .obj-list::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 4px; }
+  .obj-list::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
 
   /* ── Objection button — default ── */
   .obj-btn {
@@ -126,11 +125,6 @@ const css = `
   .obj-btn-num.active {
     background: #FF441F;
     color: #fff;
-  }
-
-  .obj-btn-icon {
-    flex-shrink: 0;
-    transition: color 0.2s ease;
   }
 
   .obj-btn-title {
@@ -260,14 +254,14 @@ const css = `
   .obj-block.orange .obj-block-label { color: #c2410c; }
   .obj-block.orange .obj-block-text  { color: #7c2d12; }
 
-  /* Dark block — Cierre */
-  .obj-block.dark {
-    background: #1A1A2E;
-    border: 1px solid #2d2d4e;
+  /* Green block — Cierre */
+  .obj-block.green {
+    background: rgba(209,250,229,0.50);
+    border: 1px solid #a7f3d0;
   }
-  .obj-block.dark .obj-block-icon { background: rgba(255,68,31,0.18); }
-  .obj-block.dark .obj-block-label { color: rgba(255,255,255,0.45); }
-  .obj-block.dark .obj-block-text  { color: rgba(255,255,255,0.88); font-weight: 600; }
+  .obj-block.green .obj-block-icon { background: #d1fae5; }
+  .obj-block.green .obj-block-label { color: #065f46; }
+  .obj-block.green .obj-block-text  { color: #064e3b; font-weight: 600; }
 
   /* ── Flujo de manejo ── */
   .obj-flujo {
@@ -297,25 +291,26 @@ const css = `
   }
   .obj-flujo-arrow { color: #d1d5db; font-size: 12px; }
 
-  /* ── Versión corta ── */
+  /* Versión corta — dark navy premium */
   .obj-short {
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: #0B192C;
+    border: 1px solid #0B192C;
     border-radius: 12px;
-    padding: 14px 18px;
+    padding: 16px 20px;
   }
   .obj-short-label {
     font-size: 10px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.09em;
-    color: #9ca3af;
+    color: rgba(255,255,255,0.45);
     margin-bottom: 5px;
   }
   .obj-short-text {
     font-size: 13px;
-    color: #6b7280;
+    color: rgba(255,255,255,0.82);
     line-height: 1.65;
+    font-weight: 500;
   }
 
   /* ── Empty state (no objection selected) ── */
@@ -381,23 +376,6 @@ const css = `
     }
   }
 `;
-
-/* ─── Objection icon map ─────────────────────────────────────────────────── */
-function getObjIcon(titulo: string, size = 14) {
-  const t = titulo.toLowerCase();
-  if (t.includes('comis') || t.includes('%'))          return <Percent size={size} />;
-  if (t.includes('tiempo') || t.includes('entrega'))   return <Clock size={size} />;
-  if (t.includes('exclusiv'))                           return <Lock size={size} />;
-  if (t.includes('precio') || t.includes('costo'))     return <DollarSign size={size} />;
-  if (t.includes('competencia') || t.includes('otro')) return <BarChart2 size={size} />;
-  if (t.includes('reparto') || t.includes('logístic')) return <Truck size={size} />;
-  if (t.includes('marca') || t.includes('imagen'))     return <Star size={size} />;
-  if (t.includes('clientes') || t.includes('usuario')) return <Users size={size} />;
-  if (t.includes('no me int') || t.includes('rechazo'))return <ThumbsDown size={size} />;
-  if (t.includes('contrato') || t.includes('términos'))return <ShieldCheck size={size} />;
-  if (t.includes('rappi'))                              return <Zap size={size} />;
-  return <HelpCircle size={size} />;
-}
 
 /* ─── Split pitch into three narrative blocks ────────────────────────────── */
 function splitPitch(pitch: string): { empatia: string; argumento: string; cierre: string } {
@@ -489,11 +467,6 @@ export function Objeciones() {
                         {obj.id}
                       </span>
 
-                      {/* Thematic icon */}
-                      <span className="obj-btn-icon" style={{ color: isActive ? '#FF441F' : '#9ca3af' }}>
-                        {getObjIcon(obj.titulo)}
-                      </span>
-
                       {/* Title */}
                       <span className={`obj-btn-title ${isActive ? 'active' : 'default'}`}>
                         {obj.titulo}
@@ -575,9 +548,9 @@ export function Objeciones() {
 
                     {/* Block 3 — Cierre */}
                     {cierre && (
-                      <div className="obj-block dark">
+                      <div className="obj-block green">
                         <div className="obj-block-icon">
-                          <ArrowRight size={18} color="#FF441F" />
+                          <ArrowRight size={18} color="#059669" />
                         </div>
                         <div>
                           <p className="obj-block-label">Cierre · La pregunta clave</p>
