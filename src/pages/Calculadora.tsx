@@ -23,7 +23,7 @@ const css = `
     font-weight: 700;
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: #FF441F;
+    color: #FF5E36;
     margin-bottom: 4px;
   }
   .calc-header-title {
@@ -59,8 +59,8 @@ const css = `
     gap: 28px;
   }
   .calc-inputs-wrapper {
-    background: rgba(255, 68, 31, 0.02);
-    border: 1.5px solid rgba(255, 68, 31, 0.08);
+    background: rgba(255, 94, 54, 0.015);
+    border: 1.5px solid rgba(255, 94, 54, 0.06);
     border-radius: 18px;
     padding: 24px;
   }
@@ -76,7 +76,7 @@ const css = `
   .calc-field-header { display: flex; align-items: center; gap: 6px; }
   .calc-field-label { font-size: 12px; font-weight: 700; color: #475569; letter-spacing: 0.03em; text-transform: uppercase; }
   .calc-field-info { color: #94a3b8; cursor: help; flex-shrink: 0; transition: color 0.2s ease; }
-  .calc-field-info:hover { color: #FF441F; }
+  .calc-field-info:hover { color: #FF5E36; }
 
   /* Tooltip */
   .calc-tooltip-wrap { position: relative; display: inline-flex; }
@@ -98,7 +98,7 @@ const css = `
     background: #fff !important; color: #0f172a !important; outline: none !important; box-sizing: border-box !important;
     transition: border-color 0.22s ease, box-shadow 0.22s ease !important;
   }
-  .calc-input:focus { border-color: #FF441F !important; box-shadow: 0 0 0 3px rgba(255,68,31,0.12) !important; }
+  .calc-input:focus { border-color: #FF5E36 !important; box-shadow: 0 0 0 3px rgba(255, 94, 54, 0.1) !important; }
 
   .calc-input-wrap { position: relative; }
   .calc-input-suffix { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 700; color: #64748b; }
@@ -112,29 +112,29 @@ const css = `
     display: flex; align-items: center; gap: 8px; margin-bottom: 20px;
   }
 
-  /* ── Right panel — Premium Gradient ── */
+  /* ── Right panel — Equilibrated Soft Gradient ── */
   .calc-right {
-    background: linear-gradient(145deg, #FF441F 0%, #E03314 100%);
+    background: linear-gradient(135deg, #FF6F48 0%, #FF5630 40%, #FF8A48 100%);
     border-radius: 20px; padding: 32px 28px;
-    box-shadow: 0 10px 30px rgba(255, 68, 31, 0.2);
+    box-shadow: 0 10px 30px rgba(255, 94, 54, 0.15);
     display: flex; flex-direction: column; position: sticky; top: 20px;
   }
   .calc-right-title {
     font-size: 12px; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; color: rgba(255,255,255,0.75); margin-bottom: 24px;
+    text-transform: uppercase; color: rgba(255,255,255,0.85); margin-bottom: 24px;
   }
 
   /* Rows */
-  .calc-result-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.15); }
+  .calc-result-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.18); }
   .calc-result-row:last-of-type { border-bottom: none; }
-  .calc-result-label { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.9); }
+  .calc-result-label { font-size: 14px; font-weight: 600; color: rgba(255,255,255,0.95); }
   .calc-result-value { font-size: 15px; font-weight: 700; color: #fff; text-align: right; }
   .calc-result-value.negative { color: #ffe4e6; font-weight: 600; }
 
   /* Neto White Hero Badge */
   .calc-neto-badge {
     background: #ffffff; border-radius: 16px; padding: 22px 20px;
-    margin-top: 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    margin-top: 24px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
   }
   .calc-neto-label { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #64748b; margin-bottom: 6px; }
   .calc-neto-value { font-size: 34px; font-weight: 900; color: #059669; line-height: 1; margin-bottom: 4px; }
@@ -142,10 +142,10 @@ const css = `
 
   /* Per-order row */
   .calc-per-order {
-    margin-top: 18px; background: rgba(255,255,255,0.12); border-radius: 12px;
+    margin-top: 18px; background: rgba(255,255,255,0.15); border-radius: 12px;
     padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;
   }
-  .calc-per-order-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); }
+  .calc-per-order-label { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9); }
   .calc-per-order-value { font-size: 14px; font-weight: 800; color: #fff; }
 
   /* ── Disclaimer ── */
@@ -284,13 +284,13 @@ export function Calculadora() {
               </p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 {[
-                  { icon: <Receipt size={14} color="#FF441F" />, term: 'Ticket promedio', text: 'Valor medio por pedido. Más ticket = más ingreso sin más operación.' },
-                  { icon: <TrendingUp size={14} color="#FF441F" />, term: 'Ingreso bruto', text: 'Facturación total antes de comisiones e impuestos (ticket × pedidos).' },
-                  { icon: <Percent size={14} color="#FF441F" />, term: `IVA sobre comisión (${ivaRate}%)`, text: 'Impuesto sobre el servicio de intermediación de Rappi, no sobre el ticket.' },
-                  { icon: <Wallet size={14} color="#FF441F" />, term: 'Ingreso neto', text: 'Lo que recibe el restaurante después de comisión e IVA. Debe cubrir costos fijos.' },
+                  { icon: <Receipt size={14} color="#FF5E36" />, term: 'Ticket promedio', text: 'Valor medio por pedido. Más ticket = más ingreso sin más operación.' },
+                  { icon: <TrendingUp size={14} color="#FF5E36" />, term: 'Ingreso bruto', text: 'Facturación total antes de comisiones e impuestos (ticket × pedidos).' },
+                  { icon: <Percent size={14} color="#FF5E36" />, term: `IVA sobre comisión (${ivaRate}%)`, text: 'Impuesto sobre el servicio de intermediación de Rappi, no sobre el ticket.' },
+                  { icon: <Wallet size={14} color="#FF5E36" />, term: 'Ingreso neto', text: 'Lo que recibe el restaurante después de comisión e IVA. Debe cubrir costos fijos.' },
                 ].map(({ icon, term, text }) => (
                   <div key={term} style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-                    <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(255,68,31,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: 10, background: 'rgba(255, 94, 54, 0.08)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                       {icon}
                     </div>
                     <div>
@@ -303,7 +303,7 @@ export function Calculadora() {
             </div>
           </div>
 
-          {/* RIGHT PANEL: Hot Orange Console */}
+          {/* RIGHT PANEL: Soft Balanced Gradient */}
           <div className="calc-right">
             <p className="calc-right-title">Proyección mensual</p>
 
@@ -332,7 +332,7 @@ export function Calculadora() {
               <span className="calc-per-order-value">{fmt(comisionPorPedido * (1 + ivaRate / 100))}</span>
             </div>
 
-            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.75)', textAlign: 'center', marginTop: 24, fontWeight: 500 }}>
+            <p style={{ fontSize: 12, color: 'rgba(255,255,255,0.85)', textAlign: 'center', marginTop: 24, fontWeight: 500 }}>
               Estimación basada en {pedidos} pedidos × {fmt(ticket)} ticket
             </p>
           </div>
