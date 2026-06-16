@@ -36,13 +36,14 @@ const TIPS_TABS = [
   { id: 'whatsapp', label: 'WhatsApp',           icon: MessageCircle },
 ];
 
+// Corregido: Mapeo estable mediante URLs CDN oficiales para evitar bloqueos del sistema operativo
 const COUNTRIES = [
-  { code: 'CO', flag: '🇨🇴' },
-  { code: 'MX', flag: '🇲🇽' },
-  { code: 'AR', flag: '🇦🇷' },
-  { code: 'CL', flag: '🇨🇱' },
-  { code: 'PE', flag: '🇵🇪' },
-  { code: 'EC', flag: '🇪🇨' },
+  { code: 'CO', flagUrl: 'https://flagcdn.com/w40/co.png' },
+  { code: 'MX', flagUrl: 'https://flagcdn.com/w40/mx.png' },
+  { code: 'AR', flagUrl: 'https://flagcdn.com/w40/ar.png' },
+  { code: 'CL', flagUrl: 'https://flagcdn.com/w40/cl.png' },
+  { code: 'PE', flagUrl: 'https://flagcdn.com/w40/pe.png' },
+  { code: 'EC', flagUrl: 'https://flagcdn.com/w40/ec.png' },
 ];
 
 const TIPS_CONTENT: Record<string, Record<string, string[]>> = {
@@ -245,7 +246,7 @@ export function Home() {
             </div>
           </div>
 
-          {/* TIPS DE VENTAS CON BANDERAS CORREGIDAS */}
+          {/* TIPS DE VENTAS CON BANDERAS CORREGIDAS MEDIANTE IMÁGENES CDN */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Tips de Ventas para Delivery · Venta en Frío
@@ -277,13 +278,13 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Tabs país — ¡Banderas 100% Corregidas! */}
+              {/* Tabs país — Corregido con renderizado infalible de imágenes */}
               <div style={{
                 display: 'flex', flexDirection: 'row', gap: 8,
                 padding: '16px 20px 12px',
                 flexWrap: 'nowrap', overflowX: 'auto',
               }}>
-                {COUNTRIES.map(({ code, flag }) => {
+                {COUNTRIES.map(({ code, flagUrl }) => {
                   const isActive = activeCountry === code;
                   return (
                     <button
@@ -302,7 +303,17 @@ export function Home() {
                         boxShadow: isActive ? '0 2px 8px rgba(255,86,48,0.12)' : 'none',
                       }}
                     >
-                      <span style={{ fontSize: 16, display: 'inline-block', lineHeight: 1 }}>{flag}</span>
+                      <img 
+                        src={flagUrl} 
+                        alt={code}
+                        style={{ 
+                          width: 18, 
+                          height: 13, 
+                          borderRadius: 2,
+                          objectFit: 'cover',
+                          boxShadow: '0 1px 2px rgba(0,0,0,0.1)'
+                        }} 
+                      />
                       <span>{code}</span>
                     </button>
                   );
