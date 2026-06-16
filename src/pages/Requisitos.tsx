@@ -91,7 +91,7 @@ const css = `
   .req-progress-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 4px; letter-spacing: -0.01em; }
   .req-progress-sub { font-size: 13px; color: rgba(255,255,255,0.85); margin-bottom: 24px; font-weight: 500; }
   
-  /* Mathematical vertical and horizontal layout alignment centering fixed */
+  /* Centered layout alignment matrix */
   .req-pct-circle {
     width: 84px; height: 84px; background: #fff; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
@@ -224,7 +224,7 @@ export function Requisitos() {
               <p className="req-progress-title">Progreso de activación</p>
               <p className="req-progress-sub">{totalDone} de {REQUISITOS.length} completados</p>
               
-              {/* Perfectly centered layout alignment matrix */}
+              {/* Centered layout alignment matrix */}
               <div className="req-pct-circle">
                 <div className="req-pct-text">{pct}%</div>
               </div>
@@ -274,7 +274,7 @@ export function Requisitos() {
                         width: 42, height: 42, borderRadius: '50%', 
                         background: isCurrentActive ? '#fff' : '#f8fafc',
                         border: isCurrentActive ? '2.5px solid #FF5630' : '2px solid #cbd5e1',
-                        display: 'flex', alignItems: 'center', justifycontent: 'center', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18,
                         boxShadow: isCurrentActive ? '0 6px 16px rgba(255,86,48,0.22)' : 'none',
                         transition: 'all 0.3s'
                       }}>
@@ -297,11 +297,6 @@ export function Requisitos() {
           </div>
 
         </div>
-
-        {/* Footnote */}
-        <p className="calc-disclaimer">
-          Proyección estimada · No incluye costos operativos del restaurante
-        </p>
 
       </div>
     </AppLayout>
