@@ -413,8 +413,7 @@ export function Propuesta() {
     fecha:                 now,
   };
 
-  const message    = buildMessage(vars);
-  const encodedMsg = encodeURIComponent(message);
+  const message = buildMessage(vars);
 
   /* ── Empty state ── */
   if (!hasActiveNegociacion) {
@@ -509,7 +508,7 @@ export function Propuesta() {
         <div className="prop-actions">
           <button
             className="btn-wa-primary"
-            onClick={() => window.open(`https://wa.me/?text=${encodedMsg}`, '_blank')}
+            onClick={() => window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`, '_blank')}
           >
             <MessageCircle size={17} /> Enviar por WhatsApp
           </button>
@@ -535,7 +534,11 @@ export function Propuesta() {
             <button
               className="btn-phone-send"
               disabled={!phone}
-              onClick={() => window.open(`https://wa.me/${phone.replace(/\D/g, '')}?text=${encodedMsg}`, '_blank')}
+              onClick={() => {
+                const numeroLimpio = phone.replace(/\D/g, '');
+                const url = `https://api.whatsapp.com/send?phone=${numeroLimpio}&text=${encodeURIComponent(message)}`;
+                window.open(url, '_blank');
+              }}
             >
               <Send size={14} /> Enviar
             </button>
