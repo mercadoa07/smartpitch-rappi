@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import {
-  MessageSquare, ShieldAlert, Calculator, Target,
-  Lightbulb, ChevronRight, Sparkles, FileText,
-  Phone, MessageCircle, Database, ArrowRight,
+  MessageSquare, ShieldAlert, Calculator, Handshake,
+  ChevronRight, Sparkles, FileText,
+  Phone, MessageCircle, Database,
   ClipboardList
 } from 'lucide-react';
 
@@ -13,21 +13,21 @@ import {
     DATA
 ───────────────────────────────────────────── */
 const SECTIONS = [
-  { to: '/negociacion', icon: Target,        label: 'Negociación', desc: 'Configura tu deal',        bg: '#fff7ed', color: '#FF441F' },
-  { to: '/pitch',       icon: MessageSquare, label: 'Pitch',       desc: 'Libreto dinámico',        bg: '#fff7ed', color: '#f97316' },
-  { to: '/objeciones',  icon: ShieldAlert,    label: 'Objeciones',  desc: '15 respuestas clave',     bg: '#faf5ff', color: '#a855f7' },
-  { to: '/propuesta',   icon: FileText,       label: 'Propuesta',   desc: 'Vista previa y envío',    bg: '#f0fdfa', color: '#0d9488' },
-  { to: '/calculadora', icon: Calculator,     label: 'Calculadora', desc: 'Proyección de ganancias', bg: '#fefce8', color: '#eab308' },
-  { to: '/requisitos',  icon: ClipboardList,  label: 'Requisitos',  desc: 'Checklist activación',    bg: '#fdf2f8', color: '#ec4899' },
+  { to: '/negociacion', icon: Handshake,     label: 'Negociación', desc: 'Configura tu deal',        bg: '#fff7ed', bgHover: '#ffedd5', borderHover: '#ff441f', color: '#FF441F' },
+  { to: '/pitch',       icon: MessageSquare, label: 'Pitch',       desc: 'Libreto dinámico',        bg: 'rgba(249, 115, 22, 0.03)', bgHover: 'rgba(249, 115, 22, 0.08)', borderHover: '#f97316', color: '#f97316' },
+  { to: '/objeciones',  icon: ShieldAlert,    label: 'Objeciones',  desc: '15 respuestas clave',     bg: '#faf5ff', bgHover: '#f3e8ff', borderHover: '#a855f7', color: '#a855f7' },
+  { to: '/propuesta',   icon: FileText,       label: 'Propuesta',   desc: 'Vista previa y envío',    bg: '#f0fdfa', bgHover: '#ccfbf1', borderHover: '#0d9488', color: '#0d9488' },
+  { to: '/calculadora', icon: Calculator,     label: 'Calculadora', desc: 'Proyección de ganancias', bg: '#fefce8', bgHover: '#fef9c3', borderHover: '#eab308', color: '#eab308' },
+  { to: '/requisitos',  icon: ClipboardList,  label: 'Requisitos',  desc: 'Checklist activación',    bg: '#fdf2f8', bgHover: '#fce7f3', borderHover: '#ec4899', color: '#ec4899' },
 ];
 
 const STEPS = [
-  { num: 1, to: '/negociacion', label: 'Empieza tu negociación',      icon: Target,        color: '#FF441F' },
-  { num: 2, to: '/pitch',       label: 'Domina tu pitch',             icon: MessageSquare, color: '#f97316' },
-  { num: 3, to: '/objeciones',  label: 'Maneja objeciones',            icon: ShieldAlert,   color: '#a855f7' },
-  { num: 4, to: '/propuesta',   label: 'Envía la propuesta',          icon: FileText,      color: '#0d9488' },
-  { num: 5, to: '/calculadora', label: 'Utiliza la calculadora',       icon: Calculator,    color: '#eab308' },
-  { num: 6, to: '/requisitos',  label: 'Ten presente los requisitos', icon: ClipboardList, color: '#ec4899' },
+  { num: 1, label: 'Empieza tu negociación',      icon: Handshake,     color: '#FF441F' },
+  { num: 2, label: 'Domina tu pitch',             icon: MessageSquare, color: '#f97316' },
+  { num: 3, label: 'Maneja objeciones',            icon: ShieldAlert,   color: '#a855f7' },
+  { num: 4, label: 'Envía la propuesta',          icon: FileText,      color: '#0d9488' },
+  { num: 5, label: 'Utiliza la calculadora',       icon: Calculator,    color: '#eab308' },
+  { num: 6, label: 'Ten presente los requisitos', icon: ClipboardList, color: '#ec4899' },
 ];
 
 const TIPS_TABS = [
@@ -36,7 +36,6 @@ const TIPS_TABS = [
   { id: 'whatsapp', label: 'WhatsApp',           icon: MessageCircle },
 ];
 
-// Corregido: Mapeo estable mediante URLs CDN oficiales para evitar bloqueos del sistema operativo
 const COUNTRIES = [
   { code: 'CO', flagUrl: 'https://flagcdn.com/w40/co.png' },
   { code: 'MX', flagUrl: 'https://flagcdn.com/w40/mx.png' },
@@ -92,12 +91,7 @@ export function Home() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
         .home-root, .home-root * { font-family: 'Poppins', sans-serif !important; }
-        .section-card { transition: transform 0.25s ease, box-shadow 0.25s ease; box-shadow: none; }
-        .section-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.06); }
-        .step-box-item { transition: all 0.2s ease; border-radius: 16px; border: 1px solid #f1f5f9; background: #fff; }
-        .step-box-item:hover { background: rgba(255,68,31,0.02); border-color: rgba(255,68,31,0.15); transform: translateY(-2px); }
-        .tip-card { transition: box-shadow 0.2s ease, transform 0.2s ease; }
-        .tip-card:hover { box-shadow: 0 6px 20px rgba(255,100,30,0.08); transform: translateY(-1px); }
+        .step-box-item { border-radius: 16px; border: 1px solid #e2e8f0; background: #fff; }
         .country-tab { transition: all 0.15s ease; }
       `}</style>
 
@@ -154,7 +148,7 @@ export function Home() {
             </button>
           </div>
 
-          {/* INSTRUCCIONES — REESTRUCTURACIÓN MATEMÁTICA SIMÉTRICA 3X3 */}
+          {/* INSTRUCCIONES — ESTÁTICAS E INFORMATIVAS (SIN HOVER NI CLICK) */}
           <div style={{ marginBottom: 48 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 18 }}>
               Instrucciones para utilizar la App
@@ -171,18 +165,17 @@ export function Home() {
                   <div
                     key={step.num}
                     className="step-box-item"
-                    onClick={() => navigate(step.to)}
                     style={{
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 14,
-                      padding: '18px 20px',
-                      cursor: 'pointer',
+                      gap: 12,
+                      padding: '16px 16px',
+                      minHeight: 74,
                     }}
                   >
-                    {/* Círculo numerado perfectamente centrado */}
+                    {/* Círculo numerado rígido */}
                     <div style={{
-                      width: 36, height: 36, borderRadius: '50%',
+                      width: 34, height: 34, borderRadius: '50%',
                       background: step.color,
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
                       flexShrink: 0,
@@ -191,17 +184,14 @@ export function Home() {
                       <span style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{step.num}</span>
                     </div>
 
-                    {/* Texto + Icono alineado y de mayor tamaño */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+                    {/* Texto + Icono alineado en tipografía estándar */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
                       <StepIcon size={16} color={step.color} strokeWidth={2.5} style={{ flexShrink: 0 }} />
                       <span style={{ 
-                        fontSize: '14.5px', 
+                        fontSize: '13.5px', 
                         fontWeight: 700, 
                         color: '#0f172a', 
-                        lineHeight: 1.3,
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        whiteSpace: 'nowrap'
+                        lineHeight: 1.25,
                       }}>
                         {step.label}
                       </span>
@@ -212,33 +202,53 @@ export function Home() {
             </div>
           </div>
 
-          {/* ACCESOS RÁPIDOS ORDENADOS POR EMBUDO */}
+          {/* ACCESOS RÁPIDOS — CON INTERACTIVIDAD MEJORADA Y FONDOS PASTEL */}
           <div style={{ marginBottom: 48 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Accesos rápidos
             </p>
 
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 20 }}>
-              {SECTIONS.map(({ to, icon: Icon, label, desc, bg, color }) => (
+              {SECTIONS.map(({ to, icon: Icon, label, desc, bg, bgHover, borderHover, color }) => (
                 <button
                   key={to}
-                  className="section-card"
                   onClick={() => navigate(to)}
                   style={{
-                    background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20,
-                    padding: '22px 20px', cursor: 'pointer', textAlign: 'left',
-                    display: 'flex', alignItems: 'center', gap: 16, outline: 'none',
+                    background: bg, 
+                    border: '1px solid #e2e8f0', 
+                    borderRadius: 20,
+                    padding: '22px 20px', 
+                    cursor: 'pointer', 
+                    textAlign: 'left',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: 16, 
+                    outline: 'none',
+                    transition: 'all 0.22s ease-in-out',
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.transform = 'translateY(-4px)';
+                    e.currentTarget.style.boxShadow = '0 12px 32px rgba(0,0,0,0.05)';
+                    e.currentTarget.style.background = bgHover;
+                    e.currentTarget.style.borderColor = borderHover;
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = 'none';
+                    e.currentTarget.style.background = bg;
+                    e.currentTarget.style.borderColor = '#e2e8f0';
                   }}
                 >
                   <div style={{
-                    width: 46, height: 46, borderRadius: 14, background: bg,
+                    width: 46, height: 46, borderRadius: 14, background: '#ffffff',
                     display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
                   }}>
                     <Icon size={22} color={color} strokeWidth={2} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <p style={{ fontSize: 14, fontWeight: 700, color: '#0f172a', margin: 0 }}>{label}</p>
-                    <p style={{ fontSize: 12, color: '#64748b', margin: '3px 0 0 0', fontWeight: 500 }}>{desc}</p>
+                    <p style={{ fontSize: 13.5, color: '#64748b', margin: '4px 0 0 0', fontWeight: 500 }}>{desc}</p>
                   </div>
                   <ChevronRight size={16} color="#cbd5e1" style={{ flexShrink: 0 }} />
                 </button>
@@ -246,13 +256,13 @@ export function Home() {
             </div>
           </div>
 
-          {/* TIPS DE VENTAS CON BANDERAS CORREGIDAS MEDIANTE IMÁGENES CDN */}
+          {/* TIPS DE VENTAS */}
           <div>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Tips de Ventas para Delivery · Venta en Frío
             </p>
 
-            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20, overflow: 'hidden', boxShadow: '0 4px 20px rgba(0,0,0,0.01)' }}>
+            <div style={{ background: '#fff', border: '1px solid #e2e8f0', borderRadius: 20, overflow: 'hidden' }}>
 
               {/* Tabs canal */}
               <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0', padding: '0 8px' }}>
@@ -278,7 +288,7 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Tabs país — Corregido con renderizado infalible de imágenes */}
+              {/* Tabs país — CDN redondas */}
               <div style={{
                 display: 'flex', flexDirection: 'row', gap: 8,
                 padding: '16px 20px 12px',
