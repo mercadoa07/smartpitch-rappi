@@ -21,10 +21,11 @@ const SECTIONS = [
   { to: '/requisitos',  icon: ClipboardList,  label: 'Requisitos',  desc: 'Checklist activación',    bg: '#fdf2f8', bgHover: '#fce7f3', borderHover: '#ec4899', color: '#ec4899' },
 ];
 
+// Ajuste específico de textos solicitado para los pasos del embudo informativo
 const STEPS = [
-  { num: 1, label: 'Empieza tu negociación',      icon: Handshake,     color: '#FF441F' },
+  { num: 1, label: 'Empieza la negociación',      icon: Handshake,     color: '#FF441F' },
   { num: 2, label: 'Domina tu pitch',             icon: MessageSquare, color: '#f97316' },
-  { num: 3, label: 'Maneja objeciones',            icon: ShieldAlert,   color: '#a855f7' },
+  { num: 3, label: 'Maneja las objeciones',           icon: ShieldAlert,   color: '#a855f7' },
   { num: 4, label: 'Envía la propuesta',          icon: FileText,      color: '#0d9488' },
   { num: 5, label: 'Utiliza la calculadora',       icon: Calculator,    color: '#eab308' },
   { num: 6, label: 'Ten presente los requisitos', icon: ClipboardList, color: '#ec4899' },
@@ -148,7 +149,7 @@ export function Home() {
             </button>
           </div>
 
-          {/* INSTRUCCIONES — ESTÁTICAS E INFORMATIVAS (SIN HOVER NI CLICK) */}
+          {/* INSTRUCCIONES ESTÁTICAS */}
           <div style={{ marginBottom: 48 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 18 }}>
               Instrucciones para utilizar la App
@@ -173,7 +174,6 @@ export function Home() {
                       minHeight: 74,
                     }}
                   >
-                    {/* Círculo numerado rígido */}
                     <div style={{
                       width: 34, height: 34, borderRadius: '50%',
                       background: step.color,
@@ -184,7 +184,6 @@ export function Home() {
                       <span style={{ fontSize: 13, fontWeight: 800, color: '#fff', lineHeight: 1 }}>{step.num}</span>
                     </div>
 
-                    {/* Texto + Icono alineado en tipografía estándar */}
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, minWidth: 0 }}>
                       <StepIcon size={16} color={step.color} strokeWidth={2.5} style={{ flexShrink: 0 }} />
                       <span style={{ 
@@ -202,7 +201,7 @@ export function Home() {
             </div>
           </div>
 
-          {/* ACCESOS RÁPIDOS — CON INTERACTIVIDAD MEJORADA Y FONDOS PASTEL */}
+          {/* ACCESOS RÁPIDOS */}
           <div style={{ marginBottom: 48 }}>
             <p style={{ fontSize: 11, fontWeight: 700, color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 22 }}>
               Accesos rápidos
@@ -288,7 +287,7 @@ export function Home() {
                 ))}
               </div>
 
-              {/* Tabs país — CDN redondas */}
+              {/* Tabs país */}
               <div style={{
                 display: 'flex', flexDirection: 'row', gap: 8,
                 padding: '16px 20px 12px',
